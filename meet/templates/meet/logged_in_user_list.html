@@ -1,0 +1,10 @@
+{%if users %}
+<p>{{ user.username }}</p>
+<ul class="user-list">
+    {% for username in users %}
+        {% ifnotequal username|cut:" "  user.username|cut:" " %}
+            <li class="users">{{ username }}</li>
+        {% endifnotequal %}
+    {% endfor %}
+</ul>
+{% endif %}

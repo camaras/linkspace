@@ -1,0 +1,6 @@
+{% if user.is_authenticated %}
+<p>hello</p>
+{% endif %}
+<p>{{ user.username }}</p>
+<ul class="user-list">
+</ul>
