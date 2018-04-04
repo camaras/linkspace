@@ -17,14 +17,15 @@
     <body>
        <div id="header">
           {% block header %}
+	  <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <a href="{% url 'index' %}">{% trans "Home" %}</a> | 
 
           {% if user.is_authenticated %}
               {% trans "Logged in" %}: {{ user.username }} 
-              (<a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a> | 
-              <a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>)
+              (<a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a> | 
+              <a class="nav-link" href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>)
           {% else %}
-              <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+              <a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
           {% endif %}
           <hr />
           {% endblock %}
@@ -39,7 +40,7 @@
             {% if messages %}
                 <ul id="messages">
                     {% for message in messages %}
-                    <li id="message_{{ forloop.counter }}"><a href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;"><small>{% trans "clear" %}</small></a> {{ message }}</li>
+                    <li id="message_{{ forloop.counter }}"><a class="nav-link" href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;"><small>{% trans "clear" %}</small></a> {{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
