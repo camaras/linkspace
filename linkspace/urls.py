@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
@@ -41,7 +41,9 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),	
+
+    url(r'^$', RedirectView.as_view(url='accounts/login'), name='index'),	
+#    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),	
     url(r'meet/', include('meet.urls')),
     url(r'book/', include('book.urls')),
     url(r'api/', include(router.urls)),

@@ -1,11 +1,30 @@
-{% extends "base.html" %}
+{% extends "registration/login_base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block login_content %}
+<h2 class="display-2">Registration</h2>
 <form method="post" action=".">
   {% csrf_token %}
-  {{ form.as_p }}
 
-  <input type="submit" value="{% trans 'Submit' %}" />
+  <div class="form-group">
+    <input type="text" name="username" id="id_username" tabindex="1" class="form-control" placeholder="Username" value="">
+  </div>
+  <div class="form-group">
+    <input type="text" name="email" id="id_email" tabindex="2" class="form-control" placeholder="Email" value="">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password1" id="id_password1" tabindex="3" class="form-control" placeholder="Password">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password2" id="id_password2" tabindex="4" class="form-control" placeholder="Password Confirmation">
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="submit" id="register" tabindex="4" class="form-control btn btn-login btn-primary" value="Register">
+      </div>
+    </div>
+  </div>
 </form>
 {% endblock %}

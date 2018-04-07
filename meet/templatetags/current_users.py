@@ -2,7 +2,10 @@ from django import template
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+import logging
 
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -18,7 +21,20 @@ def get_all_logged_in_users():
         uid_list.append(data.get('_auth_user_id', None))
 
     # Query all logged in users based on id list
-    return User.objects.filter(id__in=uid_list)
+    logged_in_users = User.objects.filter(id__in=uid_list)
+
+    # get all users who are hosting meetings
+    hosting_users = []
+    for u in logged_in_users:
+	logger.info("checking " + u.username)
+	hosting_users.append(u)
+	try:
+            if u.usermeet.meet:
+                hosting_users.append(u)
+	except ObjectDoesNotExist:
+            pass  
+
+    return hosting_users
 
 
 

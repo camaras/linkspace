@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<head>
+{% extends "base.html" %}
+{% block extra_head %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 <script src="https://meet.jit.si/external_api.js"></script>
 <script>
 $( document ).ready(function(){
 
+  $("#dropdownMenuButton").click(function(){
+    $("#dropdown-menu").empty();
+    $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
+      obj = $.parseJSON(data)
+      $.each( obj, function( key, val ) {
+        $("#dropdown-menu").append('<a class=\"users dropdown-item\" href=\"#\">' + val.username + '</a>');
+      //$("#dropdown-menu").css("display", "block");
+	$("#dropdown-menu").dropdown('toggle');
+      }); 
+
+    }});
+  });  	
 
   $("#host_meet").click(function() {
-    var domain = "meet.jit.si";
-    var options = {
-	parentNode: document.querySelector('#host_meet'),
-        roomName: "{{ request.user.username }}",
-	height: 500 
-    }
-    var api = new JitsiMeetExternalAPI(domain, options);
+    $.ajax({type:"GET", url: "host", success: function( data ){
+    	var domain = "meet.jit.si";
+    	var options = {
+		parentNode: document.querySelector('#host_meet'),
+        	roomName: "{{ request.user.username }}",
+		height: 500 
+    	}
+    	var api = new JitsiMeetExternalAPI(domain, options);
+	setInterval(function(){
+        	$.ajax({type:"GET", url: "host"});
+	}, 60000);
+    }})	
 
   });
 
@@ -34,16 +50,15 @@ $( document ).ready(function(){
   });
 });
 </script>
-</head>
-<html lang="en">
-	<body>
-		<h1> MeetMe </h1>
+{% endblock %}
+{% block content %}
+		<h1> LinkSpace </h1>
                 {% load current_users %}
 		{% render_logged_in_user_list %}
-		<a id="host_meet" href="#">Click here to host a meeting</a>
+		<br><br><br>
+		<a id="host_meet" href="#">Host a meeting</a>
 		<div id="meetme">
 		</div>
 		<div id="meetyou">
 		</div>
-	</body>
-</html>
+{% endblock %}

@@ -154,6 +154,7 @@ BOWER_INSTALLED_APPS = (
 ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_REDIRECT_URL = '/meet/meet'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 LOGGING = {
     'version': 1,
@@ -166,6 +167,11 @@ LOGGING = {
         },
     },
     'loggers': {
+	'': {
+            'handlers': ['file'],
+            'level': 'WARN',
+            'propagate': True,
+	},
         'django': {
             'handlers': ['file'],
             'level': 'WARN',

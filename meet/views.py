@@ -4,6 +4,15 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from meet.models import UserMeet
+from django.db import transaction
+import json
+import datetime
+from django.utils import timezone
+
+HOST_MEET_TIMECHECK = 3600
+
+
 # Create your views here.
 
 def meet(request):
@@ -14,17 +23,31 @@ def meet(request):
 	else:
 		raise Http404("Error") 
 
+def host(request):
+	if request.user.is_authenticated:
+		with transaction.atomic():
+			user = User.objects.get(username=request.user.username)
+			user.usermeet.meet = True
+			user.usermeet.host_dt = timezone.now()
+			user.usermeet.save()
+			user.save()
+			return HttpResponse("OK")
+	else:
+		return Http404("Error")
 
-def get_all_logged_in_users():
-    # Query all non-expired sessions
-    # use timezone.now() instead of datetime.now() in latest versions of Django
-    sessions = Session.objects.filter(expire_date__gte=timezone.now())
-    uid_list = []
+def time_diff(dt1, dt2):
+    return (dt2-dt1).total_seconds()	
 
-    # Build a list of user ids from that query
-    for session in sessions:
-        data = session.get_decoded()
-        uid_list.append(data.get('_auth_user_id', None))
+def get_all_hosting_users(request):
+    users = User.objects.all()
+    hosts = []
+    for user in users:
+	# if user is the same as the current user skip 
+        if user.username == request.user.username:
+             continue
 
-    # Query all logged in users based on id list
-    return User.objects.filter(id__in=uid_list) 
+        if user.usermeet.meet:
+		if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
+            		hosts.append({'username' : user.username}) 
+
+    return HttpResponse(json.dumps(hosts))
