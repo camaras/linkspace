@@ -19,6 +19,12 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls import *
+from django.contrib.auth import views as auth_views
+from . import views
 
 
 # Serializers define the API representation.
@@ -42,11 +48,18 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
-    url(r'^$', RedirectView.as_view(url='accounts/login'), name='index'),	
-#    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),	
-    url(r'meet/', include('meet.urls')),
+#    url(r'^$', RedirectView.as_view(url='accounts/login'), name='index'),	
+    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
+    url(r'^login/$', views.login, name='login'),	
+    url(r'^meet/', include('meet.urls')),
     url(r'book/', include('book.urls')),
     url(r'api/', include(router.urls)),
     url(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^schedule/', include('schedule.urls'), name='scheduler')
 ]
+
+if settings.DEBUG:
+#	urlpatterns += [url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+#            {'document_root': settings.STATIC_ROOT, 'show_indexes': True})]
+
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -21,7 +21,7 @@ def meet(request):
 		context = {}
 		return HttpResponse(template.render(context, request))
 	else:
-		raise Http404("Error") 
+		return HttpResponse("Error") 
 
 def host(request):
 	if request.user.is_authenticated:

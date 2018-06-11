@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,11 +23,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = True 
 
-ALLOWED_HOSTS = [u'ec2-18-219-68-140.us-east-2.compute.amazonaws.com', 
+ALLOWED_HOSTS = [u'10.224.209.68', u'ec2-18-219-68-140.us-east-2.compute.amazonaws.com', 
 		'test2.duknow.com',
 		'172.31.34.235']
+
+SESSION_ENGINE='django.contrib.sessions.backends.db'
+
+SESSION_SAVE_EVERY_REQUEST=True
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': {
+        'rest_framework.authentication.BasicAuthentication'
+    }
+}
 
 
 # Application definition
@@ -45,6 +56,7 @@ INSTALLED_APPS = [
     'djangobower',	
     'meet',
     'book',
+    'linkspace'	
 ]
 
 MIDDLEWARE = [
@@ -137,10 +149,13 @@ LANGUAGE_BIDI = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',	
     'djangobower.finders.BowerFinder'
 ]
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/home/chanc/linkspace/static'
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 BOWER_COMPONENTS_ROOT = '/home/chanc/linkspace/components/'
 
@@ -162,19 +177,19 @@ LOGGING = {
     'handlers': {
         'file': {
             'class': 'logging.FileHandler',
-            'filename': '/home/cont/linkspace/debug.log',
+            'filename': '/home/chanc/linkspace/debug.log',
             'formatter' : 'verbose'
         },
     },
     'loggers': {
 	'': {
             'handlers': ['file'],
-            'level': 'WARN',
+            'level': 'INFO',
             'propagate': True,
 	},
         'django': {
             'handlers': ['file'],
-            'level': 'WARN',
+            'level': 'INFO',
             'propagate': True,
         },
     },

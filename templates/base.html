@@ -1,10 +1,16 @@
 {% load i18n static %}
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+<html  xmlns="http://www.w3.org/1999/xhtml" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
+    <script src="{% static "linkspace.js" %}"></script>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <script type="text/javascript" src="{% static "schedule.js" %}"></script>
+
+	<script type="text/javascript" src="{% static "schedule.js" %}"></script>
         <link rel="stylesheet" href="{% static "schedule.css" %}" type="text/css" media="screen">
         <link rel="stylesheet" href="{% static "jquery-ui/themes/base/all.css" %}" type="text/css" media="screen">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -16,11 +22,14 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.css"></link>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.print.css" media="print"></link>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.js"></script>
+
         {% block extra_head %}
         {% endblock %}
+
     </head>
 
-    <body>
+    <body ng-app="lnkspace">
+       <div>
        <div id="header">
           {% block header %}
 	  <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,13 +39,15 @@
               {% trans "Logged in" %}: {{ user.username }} 
               (<a class="nav-link" href="{% url 'auth_logout' %}">{% trans "Log out" %}</a> | 
               <a class="nav-link" href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>)
-          {% else %}
-              <a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
-          {% endif %}
 
               <a class="nav-link" href=/meet/meet>{% trans "Meet" %}</a>
 
               <a class="nav-link" href=/book/book>{% trans "Book" %}</a>
+          {% else %}
+              <a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+
+
+          {% endif %}
           <hr />
           {% endblock %}
        </div>
@@ -55,12 +66,12 @@
                 </ul>
             {% endif %}
 
-            {% block body %}
-            {% endblock %}
+	    <div ng-view>	
+	    </div>	
 
         </div>
 
         <div id="footer">{% block footer %}{% endblock %}</div>
-
+      </div>
     </body>
 </html>
