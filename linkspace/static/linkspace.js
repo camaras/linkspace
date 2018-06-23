@@ -11,7 +11,11 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
       templateUrl : "/accounts/login/",
     })
     .when("/accounts/register/", {
+      controller : 'LoginController',
       templateUrl : "/accounts/register/"
+    })
+    .when("/accounts/register/complete/", {
+      templateUrl : "/accounts/register/complete"
     })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
@@ -30,10 +34,22 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
 app.factory('AuthenticationService',
     ['$http', function($http){
         var service = {}
-        alert("hello2");
 	service.Login = function(username, password, callback){
-	    alert("hello3" + username);
 	    $http({url: '/login/', method: "POST", data: {"username": username,"password" :  password }})
+	        .then(function(response){
+		    callback(response);
+		});
+	};
+	service.Register = function(username, password1, password2, email, callback){
+
+            var formData = new FormData();
+            formData.append("username", username);
+            formData.append("password1", password1);
+            formData.append("password2", password2);
+            formData.append("email", email);	
+
+
+	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email })})
 	        .then(function(response){
 		    callback(response);
 		});
@@ -45,15 +61,21 @@ app.factory('AuthenticationService',
 app.controller('LoginController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
         function($scope, $rootScope, $location, AuthenticationService){
-	    alert("hello" + $scope.username);
 	    $scope.login = function(){
-		alert("hello4");
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
 	            if(response.status == 200){
 		        $location.path('meet/meet');
 		    }
 	        })
 	    }
+	    $scope.register = function(){
+		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, function(response) {
+                    if (response.status == 302 && response.headers['Location'] ){
+			$location.path('register/complete/');
+		    }
+                })
+            };
+      	    
 	}
     ]);
 

@@ -12,6 +12,8 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
+from registration.backends.hmac.views import RegistrationView
+from registration.forms import RegistrationForm
 
 HOST_MEET_TIMECHECK = 3600
 
@@ -28,6 +30,25 @@ def login(request):
 			return HttpResponse("Ok")
 		else:
 			return HttpResponse(status=404, reason="authentication failed")
+	else:
+		return HttpResponse(status=404, reason="post required")
+
+
+def register(request):
+
+	if request.method == "POST":
+		json_data = json.loads(request.body)
+		username = json_data['username']
+		password = json_data['password']
+		email = json_data['email']
+		rf = RegistrationForm(request.POST)
+		result = register(username = json_data['username'],
+			password = json_data['password'],
+			email = json_data['email'])
+		if result is not None:
+			return HttpResponse("Ok")
+		else:
+			return HttpResponse(status=404, reason="registration failed")
 	else:
 		return HttpResponse(status=404, reason="post required")
 

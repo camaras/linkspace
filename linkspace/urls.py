@@ -50,7 +50,8 @@ urlpatterns = [
 
 #    url(r'^$', RedirectView.as_view(url='accounts/login'), name='index'),	
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
-    url(r'^login/$', views.login, name='login'),	
+    url(r'^login/$', views.login, name='login'),
+    url(r'^register/$', views.register, name='register'),
     url(r'^meet/', include('meet.urls')),
     url(r'book/', include('book.urls')),
     url(r'api/', include(router.urls)),
