@@ -14,8 +14,8 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
       controller : 'LoginController',
       templateUrl : "/accounts/register/"
     })
-    .when("/accounts/register/complete/", {
-      templateUrl : "/accounts/register/complete"
+    .when("/accounts/register/complete", {
+      templateUrl : "/accounts/register/complete/"
     })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
@@ -70,10 +70,15 @@ app.controller('LoginController',
 	    }
 	    $scope.register = function(){
 		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, function(response) {
-                    if (response.status == 302 && response.headers['Location'] ){
-			$location.path('register/complete/');
-		    }
-                })
+                        if (response.statusText == "OK"){
+			    $location.path('accounts/register/complete');
+		        }
+                    }, function(response){
+                        if (response.status == 302){
+                            $location.path('accounts/register/complete');
+                        }
+                    }
+                )
             };
       	    
 	}
