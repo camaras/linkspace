@@ -22,6 +22,7 @@ $( document ).ready(function(){
 
   $("#host_meet").click(function() {
     $.ajax({type:"GET", url: "host", success: function( data ){
+        debugger;
     	var domain = "meet.jit.si";
     	var options = {
 		parentNode: document.querySelector('#host_meet'),
@@ -49,13 +50,15 @@ $( document ).ready(function(){
   });
 });
 </script>
+                <div ng-controller="MeetController">	
 		<h1> LinkSpace </h1>
                 {% load current_users %}
 		{% render_logged_in_user_list %}
 		<br><br><br>
-		<a id="host_meet" href="#">Host a meeting</a>
-		<div id="meetme">
+		<a id="host_meet" href ng-click="click_host()">Host a meeting</a>
+		<div id="meetme" >
 		</div>
 		<div id="meetyou">
 		</div>
+                </div>
 {% endblock %}

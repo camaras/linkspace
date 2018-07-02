@@ -118,4 +118,24 @@ app.controller('MenuController',
             };
 
         }
-    ]); 
+    ]);
+
+app.controller('MeetController',
+    ['$scope', function($scope){
+        $scope.click_host = function(){
+            $.ajax({type:"GET", url: "host", success: function( data ){
+                debugger;
+                var domain = "meet.jit.si";
+                var options = {
+                    parentNode: document.querySelector('#host_meet'),
+                    roomName: "{{ request.user.username }}",
+                    height: 500 
+                }
+                var api = new JitsiMeetExternalAPI(domain, options);
+                setInterval(function(){
+                    $.ajax({type:"GET", url: "host"});
+                }, 60000);
+            }}) 
+
+        };
+    }]);
