@@ -6,6 +6,10 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
       controller: 'LoginController',	
       templateUrl : "/accounts/login/"
     })
+    .when("/accounts/logout/", {
+      controller : 'LoginController',
+      templateUrl : "/accounts/login/"
+    })
     .when("/accounts/login/", {
       controller : 'LoginController',
       templateUrl : "/accounts/login/",
@@ -64,6 +68,7 @@ app.controller('LoginController',
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
 	            if(response.status == 200){
+                        $rootScope.$broadcast('Login');
 		        $location.path('meet/meet');
 		    }
 	        })
@@ -80,7 +85,25 @@ app.controller('LoginController',
                     }
                 )
             };
+            $scope.logout = function(){
+                AuthenticationService.Logout(function(response){
+            })
+            };
       	    
 	}
     ]);
 
+app.controller('MenuController',
+    ['$scope', '$rootScope', '$location', 
+        function($scope, $rootScope, $location){
+            $rootScope.$on('Login', function(){
+                alert("login");
+                $scope.login_status = true;
+            });
+            $rootScope.$on('Logout', function(){
+                alert("logout");
+                $scope.login_status = false; 
+            });	
+
+        }
+    ]); 
