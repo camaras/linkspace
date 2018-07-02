@@ -58,6 +58,12 @@ app.factory('AuthenticationService',
 		    callback(response);
 		});
 	};
+
+        service.Logout = function(callback){
+	    $http({url: '/accounts/logout/', method: "POST" }).then(function(response){
+                callback(response);
+            });
+        };
 	return service;
    }]
 );
@@ -85,17 +91,13 @@ app.controller('LoginController',
                     }
                 )
             };
-            $scope.logout = function(){
-                AuthenticationService.Logout(function(response){
-            })
-            };
       	    
 	}
     ]);
 
 app.controller('MenuController',
-    ['$scope', '$rootScope', '$location', 
-        function($scope, $rootScope, $location){
+    ['$scope', '$rootScope', '$location', 'AuthenticationService', 
+        function($scope, $rootScope, $location, AuthenticationService){
             $rootScope.$on('Login', function(){
                 alert("login");
                 $scope.login_status = true;
@@ -103,7 +105,17 @@ app.controller('MenuController',
             $rootScope.$on('Logout', function(){
                 alert("logout");
                 $scope.login_status = false; 
-            });	
+            });
+
+            $scope.logout = function(){
+                AuthenticationService.Logout(function(response){
+                    if (response.status == 200){
+                        // TODO - check if 200 is correct code for succesfull logout 
+                        $rootScope.$broadcast('Logout');
+                        $location.path('accounts/login/');
+                    }; 
+            })
+            };
 
         }
     ]); 

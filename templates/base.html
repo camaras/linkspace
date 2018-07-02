@@ -36,7 +36,7 @@
           <a class="nav-link" href="{% url 'index' %}">{% trans "Home" %}</a> 
 
           <span ng-show="login_status">{% trans "Logged in" %}: {{ user.username }}</span> 
-          <span ng-show="login_status" class="nav-link" ng-click="logout()">{% trans "Log out" %}</span> 
+          <a ng-show="login_status" class="nav-link" href ng-click="logout()">{% trans "Log out" %}</a> 
           <a ng-show="login_status" class="nav-link" href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>
 
           <a ng-show="login_status" class="nav-link" href=/meet/meet>{% trans "Meet" %}</a>
