@@ -99,11 +99,9 @@ app.controller('MenuController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService', 
         function($scope, $rootScope, $location, AuthenticationService){
             $rootScope.$on('Login', function(){
-                alert("login");
                 $scope.login_status = true;
             });
             $rootScope.$on('Logout', function(){
-                alert("logout");
                 $scope.login_status = false; 
             });
 
