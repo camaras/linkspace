@@ -23,6 +23,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
+    })
+    .when("/book/book", {
+      templateUrl : "/book/book"
     });
 
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -120,6 +123,30 @@ app.controller('MenuController',
 
 app.controller('MeetController',
     ['$scope', function($scope){
+
+        $scope.click_connect = function(){
+            $("#dropdown-menu").empty();
+            $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
+                obj = $.parseJSON(data)
+                $.each(obj, function(key, val){
+                    $("#dropdown-menu").append('<a class=\"users dropdown-item\" href=\"#\"  ng-click=\"user_click()\">' + val.username + '</a>');
+                    $("#dropdown-menu").dropdown('toggle');
+                });
+            }});
+        };
+
+        $scope.user_click = function(){
+            var domain = "meet.jit.si";
+            var options = {
+                parentNode: document.querySelector('#meetyou'),
+                roomName: this.textContent,
+                height: 500 
+            }
+            var api = new JitsiMeetExternalAPI(domain, options);
+            console.log("value: " + this.textContent);
+        };
+
+
         $scope.click_host = function(){
             $.ajax({type:"GET", url: "host", success: function( data ){
                 debugger;
@@ -137,3 +164,10 @@ app.controller('MeetController',
 
         };
     }]);
+
+app.controller('BookController',
+    ['$scope', function($scope){
+
+        }
+    ]);
+    

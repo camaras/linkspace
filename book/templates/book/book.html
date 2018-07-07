@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block extra_head %}
+{% block content %}
 <script>
 $( document ).ready(function(){
     // page is now ready, initialize the calendar...
@@ -27,12 +26,8 @@ $( document ).ready(function(){
   });
 });
 </script>
-{% endblock %}
-{% block content %}
-<html lang="en">
-	<body>
+                <div>
 		<h1> Book </h1>
 		<div id="calendar"></div>
-	</body>
-</html>
+                </div>
 {% endblock %}
