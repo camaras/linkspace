@@ -139,34 +139,44 @@ app.controller('MeetController',
 
         $scope.user_click = function($event){
 
-            alert($event.target.textContent);
             var domain = "meet.jit.si";
             var options = {
                 parentNode: document.querySelector('#meetyou'),
                 roomName: $event.target.textContent,
                 height: 500 
             }
-            var api = new JitsiMeetExternalAPI(domain, options);
+            $('#dropdown-menu').dropdown('toggle');
+            $scope.api.dispose();
+
+            $scope.api = new JitsiMeetExternalAPI(domain, options);
+            $scope.api.on('pariticipantLeft', function(){
+                if ($scope.api.getNumberOfParticipants() <= 1){
+                    $scope.api.dispose();
+                    $scope.init_host(); 
+                };
+            }); 
             console.log("value: " + $event.target.textContent);
         };
 
 
-        $scope.click_host = function(){
+        $scope.init_host = function(){
             $.ajax({type:"GET", url: "host", success: function( data ){
-                debugger;
                 var domain = "meet.jit.si";
                 var options = {
-                    parentNode: document.querySelector('#host_meet'),
+                    parentNode: document.querySelector('#meetme'),
                     roomName: $rootScope.username,
                     height: 500 
                 }
-                var api = new JitsiMeetExternalAPI(domain, options);
+                $scope.api = new JitsiMeetExternalAPI(domain, options);
                 setInterval(function(){
                     $.ajax({type:"GET", url: "host"});
                 }, 60000);
             }}) 
 
         };
+
+        $scope.init_host();
+
     }]);
 
 app.controller('BookController',

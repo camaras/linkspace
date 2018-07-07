@@ -8,12 +8,11 @@
 		<h1> LinkSpace </h1>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" ng-mousedown="click_connect()" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with....</button>
-                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="dropdownMenuButton" ng-click="user_click($event)">
+                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="dropdownMenuButton" ng-mouseup="user_click($event)">
                     </div>
                 </div>
 
 		<br><br><br>
-		<a id="host_meet" href="" ng-click="click_host()">Host a meeting</a>
 		<div id="meetme" >
 		</div>
 		<div id="meetyou">
