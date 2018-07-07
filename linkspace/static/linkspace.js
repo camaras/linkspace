@@ -77,6 +77,7 @@ app.controller('LoginController',
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
 	            if(response.status == 200){
+                        $rootScope.username = $scope.username;
                         $rootScope.$broadcast('Login');
 		        $location.path('meet/meet');
 		    }
@@ -111,7 +112,8 @@ app.controller('MenuController',
             $scope.logout = function(){
                 AuthenticationService.Logout(function(response){
                     if (response.status == 200){
-                        // TODO - check if 200 is correct code for succesfull logout 
+                        // TODO - check if 200 is correct code for succesfull logout
+                        $rootScope.username = ""; 
                         $rootScope.$broadcast('Logout');
                         $location.path('accounts/login/');
                     }; 
@@ -122,7 +124,7 @@ app.controller('MenuController',
     ]);
 
 app.controller('MeetController',
-    ['$scope', function($scope){
+    ['$scope', '$rootScope', function($scope, $rootScope){
 
         $scope.click_connect = function(){
             $("#dropdown-menu").empty();
@@ -135,15 +137,17 @@ app.controller('MeetController',
             }});
         };
 
-        $scope.user_click = function(){
+        $scope.user_click = function($event){
+
+            alert($event.target.textContent);
             var domain = "meet.jit.si";
             var options = {
                 parentNode: document.querySelector('#meetyou'),
-                roomName: this.textContent,
+                roomName: $event.target.textContent,
                 height: 500 
             }
             var api = new JitsiMeetExternalAPI(domain, options);
-            console.log("value: " + this.textContent);
+            console.log("value: " + $event.target.textContent);
         };
 
 
@@ -153,7 +157,7 @@ app.controller('MeetController',
                 var domain = "meet.jit.si";
                 var options = {
                     parentNode: document.querySelector('#host_meet'),
-                    roomName: "{{ request.user.username }}",
+                    roomName: $rootScope.username,
                     height: 500 
                 }
                 var api = new JitsiMeetExternalAPI(domain, options);

@@ -7,9 +7,8 @@
                 <div ng-controller="MeetController">	
 		<h1> LinkSpace </h1>
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" ng-click="click_connect()" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with....</button>
-                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="users dropdown-item" href="#">{{ username }}</a>
+                    <button class="btn btn-secondary dropdown-toggle" ng-mousedown="click_connect()" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with....</button>
+                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="dropdownMenuButton" ng-click="user_click($event)">
                     </div>
                 </div>
 
