@@ -45,7 +45,9 @@ app.factory('AuthenticationService',
 	    $http({url: '/login/', method: "POST", data: {"username": username,"password" :  password }})
 	        .then(function(response){
 		    callback(response);
-		});
+		}, function(response){
+                    callback(response)
+                });
 	};
 	service.Register = function(username, password1, password2, email, callback){
 
@@ -74,6 +76,7 @@ app.factory('AuthenticationService',
 app.controller('LoginController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
         function($scope, $rootScope, $location, AuthenticationService){
+            $scope.login_failed = false;
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
 	            if(response.status == 200){
@@ -81,6 +84,11 @@ app.controller('LoginController',
                         $rootScope.$broadcast('Login');
 		        $location.path('meet/meet');
 		    }
+                    else
+                    {
+                        $scope.login_failed = true; 
+
+                    } 
 	        })
 	    }
 	    $scope.register = function(){

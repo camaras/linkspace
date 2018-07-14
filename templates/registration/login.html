@@ -17,6 +17,9 @@
         <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login btn-primary" value="Log In">
       </div>
     </div>
+    <div ng-if="login_failed" class="alert alert-danger" role="alert">
+      Login Failed
+    </div> 
   </div>
 
 </form>
