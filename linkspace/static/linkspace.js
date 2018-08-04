@@ -77,6 +77,7 @@ app.controller('LoginController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
         function($scope, $rootScope, $location, AuthenticationService){
             $scope.login_failed = false;
+
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
 	            if(response.status == 200){
@@ -134,6 +135,7 @@ app.controller('MenuController',
 app.controller('MeetController',
     ['$scope', '$rootScope', function($scope, $rootScope){
 
+
         $scope.click_connect = function(){
             $("#dropdown-menu").empty();
             $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
@@ -154,32 +156,67 @@ app.controller('MeetController',
                 height: 500 
             }
             $('#dropdown-menu').dropdown('toggle');
-            $scope.api.dispose();
 
-            $scope.api = new JitsiMeetExternalAPI(domain, options);
-            $scope.api.on('pariticipantLeft', function(){
-                if ($scope.api.getNumberOfParticipants() <= 1){
-                    $scope.api.dispose();
-                    $scope.init_host(); 
-                };
-            }); 
+	    $scope.skylink.joinRoom($event.target.textContent, {
+                audio: true,
+                video: true
+            }, function(error, success) {
+                if (error) return;
+                console.log("User connected to " + $event.target.textContent);
+	    });
+
             console.log("value: " + $event.target.textContent);
         };
 
 
         $scope.init_host = function(){
-            $.ajax({type:"GET", url: "host", success: function( data ){
-                var domain = "meet.jit.si";
-                var options = {
-                    parentNode: document.querySelector('#meetme'),
-                    roomName: $rootScope.username,
-                    height: 500 
-                }
-                $scope.api = new JitsiMeetExternalAPI(domain, options);
-                setInterval(function(){
-                    $.ajax({type:"GET", url: "host"});
-                }, 60000);
-            }}) 
+            var skylink = new Skylink();
+
+	    $scope.skylink = skylink;
+
+            skylink.on('peerJoined', function(peerId, peerInfo, isSelf){
+                if(isSelf) return;
+                  var vid = document.createElement('video');
+                  vid.autoplay = true;
+                  vid.muted = true;
+                  vid.id = peerId;
+                  document.body.appendChild(vid);
+            });
+
+
+    	    skylink.on('incomingStream', function(peerId, stream, isSelf) {
+      		if(isSelf) return;
+      		var vid = document.getElementById(peerId);
+      	    attachMediaStream(vid, stream);
+    	    });
+
+ 
+    	    skylink.on('peerLeft', function(peerId, peerInfo, isSelf) {
+                var vid = document.getElementById(peerId);
+		if (vid != null){
+                	document.body.removeChild(vid);
+		}
+            });
+
+    	    skylink.on('mediaAccessSuccess', function(stream) {
+                var vid = document.getElementById('myvideo');
+                attachMediaStream(vid, stream);
+            });
+
+    	    skylink.init({
+                apiKey: '6f30e75a-dbe5-438d-b161-58f6967690fd',
+                defaultRoom: $rootScope.username
+            }, function() {
+                 skylink.joinRoom({
+                     audio: true,
+                     video: true
+                 });
+            });
+
+            var host_timer = setInterval(function(){
+		$.ajax({type:"GET", url: "host"});
+	    }, 60000);
+
 
         };
 
