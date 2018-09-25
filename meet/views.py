@@ -9,6 +9,7 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
+import pdb
 
 HOST_MEET_TIMECHECK = 3600
 
@@ -49,5 +50,4 @@ def get_all_hosting_users(request):
         if user.usermeet.meet:
 		if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
             		hosts.append({'username' : user.username}) 
-
     return HttpResponse(json.dumps(hosts))

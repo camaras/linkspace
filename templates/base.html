@@ -6,7 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
-    <script src="{% static "linkspace.js" %}"></script>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
@@ -22,7 +21,39 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.css"></link>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.print.css" media="print"></link>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.js"></script>
-        <script src="//cdn.temasys.io/skylink/skylinkjs/0.6.x/skylink.complete.min.js"></script>     
+    	<script src="{% static "linkspace.js" %}"></script>
+	<script type="text/javascript">
+	  function onVidyoClientLoaded(status) {
+	    switch (status.state) {
+	      case "READY":    // The library is operating normally
+		// After the VidyoClient/VidyoConnector is successfully initialized,
+		// a global VC object will become available.
+		//
+		// Load the rest of the application here
+		// ...
+		var event = new CustomEvent('vidyoclient:ready', {detail: VC});
+		document.dispatchEvent(event);
+		break;
+	      case "RETRYING":     // The library operating is temporarily paused
+		break;
+	      case "FAILED":       // The library operating has stopped
+		break;
+	      case "FAILEDVERSION":// The version of the Javascript library does not match the plugin
+		status.plugInVersion; // The Version of the plugin currently installed
+		status.jsVersion;     // The Version of the Javascript library loaded
+		break;
+	      case "NOTAVAILABLE": // The library is not available
+		break;
+	    }
+	    status.downloadType;                       // Available download types with possible values of "MOBILE" "PLUGIN" "APP"
+	    status.downloadPathApp;                    // Path to the application installer for the app which could be invoked with a protocol handler
+	    status.downloadPathPlugIn;                 // Path to the Plugin that can be installed
+	    status.downloadPathWebRTCExtensionChrome;  // Path to the optional Chrome extension required for Screen Sharing in WebRTC
+	    status.downloadPathWebRTCExtensionFirefox; // Path to the optional Firefox extension required for Screen Sharing in WebRTC
+	    return true; // Return true to reload the plugins if not available
+	  }
+	</script>
+	<script src="https://static.vidyo.io/4.1.23.21/javascript/VidyoClient/VidyoClient.js?onload=onVidyoClientLoaded"></script>
 
         {% block extra_head %}
         {% endblock %}

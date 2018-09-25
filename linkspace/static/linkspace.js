@@ -149,77 +149,83 @@ app.controller('MeetController',
 
         $scope.user_click = function($event){
 
-            var domain = "meet.jit.si";
-            var options = {
-                parentNode: document.querySelector('#meetyou'),
-                roomName: $event.target.textContent,
-                height: 500 
-            }
-            $('#dropdown-menu').dropdown('toggle');
+            $scope.youvidyoConnector.Connect({
+      		host: "prod.vidyo.io",
+      		token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNDIxNTQxNwAANzU5ODE5ZGY0YmI5NTA2NzI1Y2VhNmRhZDQ1MzQyYzUwOTg3MTFmMTlhMDI1NmE4M2ZhN2U5MzVhODkyZjJkMGI2OGJlNTY3ZTBlZjc5NWQ3MzU0ODZmNTZmMGE2M2Mz",    
+      		displayName: $scope.username,    
+      		resourceId: $event.target.textContent,
+      		onSuccess: () => {
+         		// successful connection
+      		},
+      		onFailure: (reason) => {
+        		// failed to connect, check reason to find out why
+      		},
+      		onDisconnected: (reason) => {
+        		//  disconnected, this can be user triggered as well as error case
+      		}
 
-	    $scope.skylink.joinRoom($event.target.textContent, {
-                audio: true,
-                video: true
-            }, function(error, success) {
-                if (error) return;
-                console.log("User connected to " + $event.target.textContent);
-	    });
+            });
+
+            $('#dropdown-menu').dropdown('toggle');
 
             console.log("value: " + $event.target.textContent);
         };
 
 
         $scope.init_host = function(){
-            var skylink = new Skylink();
+                /*document.addEventListener('vidyoclient:ready', (e) => {
+                    $scope.setupVidyoClient(e.detail);
+                }); */
 
-	    $scope.skylink = skylink;
+		$.ajax({type:"GET", url: "host", success: function( data ){
 
-            skylink.on('peerJoined', function(peerId, peerInfo, isSelf){
-                if(isSelf) return;
-                  var vid = document.createElement('video');
-                  vid.autoplay = true;
-                  vid.muted = true;
-                  vid.id = peerId;
-                  document.body.appendChild(vid);
-            });
-
-
-    	    skylink.on('incomingStream', function(peerId, stream, isSelf) {
-      		if(isSelf) return;
-      		var vid = document.getElementById(peerId);
-      	    attachMediaStream(vid, stream);
-    	    });
-
- 
-    	    skylink.on('peerLeft', function(peerId, peerInfo, isSelf) {
-                var vid = document.getElementById(peerId);
-		if (vid != null){
-                	document.body.removeChild(vid);
-		}
-            });
-
-    	    skylink.on('mediaAccessSuccess', function(stream) {
-                var vid = document.getElementById('myvideo');
-                attachMediaStream(vid, stream);
-            });
-
-    	    skylink.init({
-                apiKey: '6f30e75a-dbe5-438d-b161-58f6967690fd',
-                defaultRoom: $rootScope.username
-            }, function() {
-                 skylink.joinRoom({
-                     audio: true,
-                     video: true
-                 });
-            });
-
-            var host_timer = setInterval(function(){
-		$.ajax({type:"GET", url: "host"});
-	    }, 60000);
-
+               		$scope.setupVidyoClient(VC);
+		}});
 
         };
 
+        $scope.setupVidyoClient = function(VC){
+		VC.CreateVidyoConnector({
+		  viewId: "myvideo",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
+		  viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
+		  remoteParticipants: 15,                        // Maximum number of participants
+		  logFileFilter: "warning all@VidyoConnector info@VidyoClient",
+		  logFileName:"",
+		  userData:""
+		}).then(function(vidyoConnector) {
+		   	$scope.vidyoConnector = vidyoConnector;
+            		$scope.vidyoConnector.Connect({
+      				host: "prod.vidyo.io",
+      				token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNDIxNTQxNwAANzU5ODE5ZGY0YmI5NTA2NzI1Y2VhNmRhZDQ1MzQyYzUwOTg3MTFmMTlhMDI1NmE4M2ZhN2U5MzVhODkyZjJkMGI2OGJlNTY3ZTBlZjc5NWQ3MzU0ODZmNTZmMGE2M2Mz",    
+      				displayName: $scope.username,    
+      				resourceId: $scope.username,
+      				onSuccess: () => {
+         				// successful connection
+      				},
+      				onFailure: (reason) => {
+        				// failed to connect, check reason to find out why
+      				},
+      				onDisconnected: (reason) => {
+        				//  disconnected, this can be user triggered as well as error case
+      				}
+
+            		});
+		});
+
+
+		VC.CreateVidyoConnector({
+		  viewId: "youvideo",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
+		  viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
+		  remoteParticipants: 15,                        // Maximum number of participants
+		  logFileFilter: "warning all@VidyoConnector info@VidyoClient",
+		  logFileName:"",
+		  userData:""
+		}).then(function(vidyoConnector) {
+		   	$scope.youvidyoConnector = vidyoConnector;
+		});
+
+
+        };
         $scope.init_host();
 
     }]);
@@ -229,4 +235,5 @@ app.controller('BookController',
 
         }
     ]);
+
 /* end */    
