@@ -149,27 +149,31 @@ app.controller('MeetController',
 
         $scope.user_click = function($event){
 
-            $scope.youvidyoConnector.Connect({
-      		host: "prod.vidyo.io",
-      		token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNDIxNTQxNwAANzU5ODE5ZGY0YmI5NTA2NzI1Y2VhNmRhZDQ1MzQyYzUwOTg3MTFmMTlhMDI1NmE4M2ZhN2U5MzVhODkyZjJkMGI2OGJlNTY3ZTBlZjc5NWQ3MzU0ODZmNTZmMGE2M2Mz",    
-      		displayName: $scope.username,    
-      		resourceId: $event.target.textContent,
-      		onSuccess: () => {
-         		// successful connection
-      		},
-      		onFailure: (reason) => {
-        		// failed to connect, check reason to find out why
-      		},
-      		onDisconnected: (reason) => {
-        		//  disconnected, this can be user triggered as well as error case
-      		}
+			$scope.setupVidyoClient($event.target.textContent);
 
-            });
+            		/* $scope.vidyoConnector.Connect({
+      				host: "prod.vidyo.io",
+      				token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNTM0ODk4MAAAYTRiMjRkMTBlOWExNGU3OWFlYWNmMjFkM2RiZjhjYzJjN2UzNmVlNTU1MDA2MjY2ODRhYmUyMGNmNzc0MDYyMmVjYWQ3NDQwZDA4NDEzYjljOWNiZjNlMWUwMjRiMjI1",    
+      				displayName: $scope.username,    
+      				resourceId: $event.target.textContent,
+      				onSuccess: () => {
+                                        alert("success");
+         				// successful connection
+      				},
+      				onFailure: (reason) => {
+                                        alert(reason);
+        				// failed to connect, check reason to find out why
+      				},
+      				onDisconnected: (reason) => {
+        				//  disconnected, this can be user triggered as well as error case
+      				}
 
-            $('#dropdown-menu').dropdown('toggle');
+            		});*/
 
-            console.log("value: " + $event.target.textContent);
         };
+
+        $('#dropdown-menu').dropdown('toggle');
+
 
 
         $scope.init_host = function(){
@@ -179,12 +183,12 @@ app.controller('MeetController',
 
 		$.ajax({type:"GET", url: "host", success: function( data ){
 
-               		$scope.setupVidyoClient(VC);
+               		$scope.setupVidyoClient($scope.username);
 		}});
 
         };
 
-        $scope.setupVidyoClient = function(VC){
+        $scope.setupVidyoClient = function(resourceID){
 		VC.CreateVidyoConnector({
 		  viewId: "myvideo",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
 		  viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
@@ -194,18 +198,40 @@ app.controller('MeetController',
 		  userData:""
 		}).then(function(vidyoConnector) {
 		   	$scope.vidyoConnector = vidyoConnector;
+			console.log("connecting to room " + resourceID + " as " + $scope.username + " with token " + $scope.token +"END");
+			$scope.vidyoConnector.RegisterParticipantEventListener({
+				onJoined: function(participant){
+					console.log("Participant Joined " + participant.name );
+
+				},
+				onLeft: function(participant){
+				},
+				onDynamicChanged: function(participants){
+				},
+				onLoudestChanged: function(participant, audioOnly){
+				}
+			}).then(function(){
+				console.log("RegisterParticipantEventListener Success");
+			}).catch(function(){
+				console.err("RegisterParticipantEventListener Failed");
+			});
+			console.log("before token dump");
+			console.log($scope.token);
             		$scope.vidyoConnector.Connect({
       				host: "prod.vidyo.io",
-      				token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNDIxNTQxNwAANzU5ODE5ZGY0YmI5NTA2NzI1Y2VhNmRhZDQ1MzQyYzUwOTg3MTFmMTlhMDI1NmE4M2ZhN2U5MzVhODkyZjJkMGI2OGJlNTY3ZTBlZjc5NWQ3MzU0ODZmNTZmMGE2M2Mz",    
+      				token: $scope.token,    
       				displayName: $scope.username,    
-      				resourceId: $scope.username,
+      				resourceId: resourceID,
       				onSuccess: () => {
+                                        console.log("Successfull connection");
          				// successful connection
       				},
       				onFailure: (reason) => {
+                                        console.log("failed connect due to " + reason);
         				// failed to connect, check reason to find out why
       				},
       				onDisconnected: (reason) => {
+                                        console.log("disconnected")
         				//  disconnected, this can be user triggered as well as error case
       				}
 
@@ -213,20 +239,8 @@ app.controller('MeetController',
 		});
 
 
-		VC.CreateVidyoConnector({
-		  viewId: "youvideo",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
-		  viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
-		  remoteParticipants: 15,                        // Maximum number of participants
-		  logFileFilter: "warning all@VidyoConnector info@VidyoClient",
-		  logFileName:"",
-		  userData:""
-		}).then(function(vidyoConnector) {
-		   	$scope.youvidyoConnector = vidyoConnector;
-		});
-
 
         };
-        $scope.init_host();
 
     }]);
 

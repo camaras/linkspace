@@ -9,7 +9,8 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
-import pdb
+from mygenerateToken import get_token
+import subprocess 
 
 HOST_MEET_TIMECHECK = 3600
 
@@ -19,7 +20,13 @@ HOST_MEET_TIMECHECK = 3600
 def meet(request):
 	if request.user.is_authenticated:
 		template = loader.get_template('meet/meet.html')
-		context = {}
+		#token = get_token(request.user.username, "88739b.vidyo.io" , 18000)
+                key = open("api.key", "r").read().strip()
+		cmd = "python3 generateToken.py --key " + key + " --appID 88739b.vidyo.io --userName " + request.user.username +  " --expiresInSecs 1800"
+		print cmd	 
+                token = subprocess.check_output(["python3", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip() 
+		context = {"token": token}
+		print token
 		return HttpResponse(template.render(context, request))
 	else:
 		return HttpResponse("Error") 
