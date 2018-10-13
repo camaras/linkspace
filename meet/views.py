@@ -9,7 +9,6 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
-from mygenerateToken import get_token
 import subprocess 
 
 HOST_MEET_TIMECHECK = 3600
