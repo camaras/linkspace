@@ -154,10 +154,11 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder'
 ]
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/chanc/linkspace/static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-BOWER_COMPONENTS_ROOT = '/home/chanc/linkspace/components/'
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 BOWER_INSTALLED_APPS = (
     'jquery',
@@ -177,7 +178,7 @@ LOGGING = {
     'handlers': {
         'file': {
             'class': 'logging.FileHandler',
-            'filename': '/home/chanc/linkspace/debug.log',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
             'formatter' : 'verbose'
         },
     },
