@@ -5,7 +5,6 @@ Automat==0.5.0
 boto==2.46.1
 cffi==1.10.0
 constantly==15.1.0
-cryptography==1.8.1
 cssselect==1.0.1
 Django==1.10.6
 django-annoying==0.10.3
