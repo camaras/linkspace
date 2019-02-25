@@ -202,7 +202,10 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_USE_SSL = True
 
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
