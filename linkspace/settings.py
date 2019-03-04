@@ -202,9 +202,9 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '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'
+EMAIL_HOST = 'mail.smtp2go.com'
+EMAIL_HOST_USER = 'camarasingham@yahoo.com'
+EMAIL_HOST_PASSWORD = 'XJYB0qdonQKU'
 EMAIL_USE_SSL = True
 
 import dj_database_url
