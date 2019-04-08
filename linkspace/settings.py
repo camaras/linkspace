@@ -202,9 +202,9 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
-EMAIL_HOST = 'mail.smtp2go.com'
-EMAIL_HOST_USER = 'camarasingham@yahoo.com'
-EMAIL_HOST_PASSWORD = 'XJYB0qdonQKU'
+EMAIL_HOST = os.getenv('MAILGUN_SMTP_SERVER')
+EMAIL_HOST_USER = os.getenv('MAILGUN_SMTP_LOGIN')
+EMAIL_HOST_PASSWORD = os.getenv('MAILGUN_SMTP_PASSWORD')
 EMAIL_USE_SSL = True
 
 import dj_database_url
