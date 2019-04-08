@@ -202,9 +202,10 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
-EMAIL_HOST = os.getenv('MAILGUN_SMTP_SERVER')
-EMAIL_HOST_USER = os.getenv('MAILGUN_SMTP_LOGIN')
-EMAIL_HOST_PASSWORD = os.getenv('MAILGUN_SMTP_PASSWORD')
+EMAIL_HOST = os.environ.get('MAILGUN_SMTP_SERVER','')
+EMAIL_HOST_PORT = os.environ.get('MAILGUN_SMTP_PORT', '')
+EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD')
 EMAIL_USE_SSL = True
 
 import dj_database_url
