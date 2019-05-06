@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,7 +23,7 @@ BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG =  False 
 
 ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', u'192.168.0.4', u'192.168.0.6', u'10.224.209.68', u'ec2-18-219-68-140.us-east-2.compute.amazonaws.com', 
 		'test2.duknow.com',
