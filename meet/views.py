@@ -26,7 +26,7 @@ def meet(request):
 
 		cmd = "python3 generateToken.py --key " + key + " --appID 88739b.vidyo.io --userName " + request.user.username +  " --expiresInSecs 1800"
 		print cmd	 
-                token = subprocess.check_output(["python3", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip() 
+                token = subprocess.check_output(["python", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip() 
 		context = {"token": token}
 		print token
 		return HttpResponse(template.render(context, request))
