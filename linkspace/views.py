@@ -25,17 +25,14 @@ class MyCustomUserFormView(FormView):
     success_url = '/accounts/register/complete'
 
     def post(self, form):
-        import pdb; pdb.set_trace()
         return super(MyCustomUserFormView, self).post(form)
 
 
     def form_valid(self, form):
-        import pdb; pdb.set_trace()
         form.save()
         return super(MyCustomUserFormView, self).form_valid(form)
 
     def form_invalid(self, form):
-        import pdb; pdb.set_trace()
         return super(MyCustomUserFormView, self).form_invalid(form)
 
 # Create your views here.
@@ -65,7 +62,6 @@ def register(request):
 		result = register(username = json_data['username'],
 			password = json_data['password'],
 			email = json_data['email'])
-                import pdb; pdb.set_trace()
                 zoom_meeting_id = json_data['zoom_meeting_id']
                 print "hello"
                 print zoom_meeting_id

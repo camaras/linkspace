@@ -8,14 +8,12 @@ class MyCustomUserForm(RegistrationForm):
 
 
     def form_valid(self, form):
-        import pdb; pdb.set_trace() 
         form.save()
         super(MyCustomUserForm, self).form_valid(form)
 
 
 
     def save(self):
-        import pdb; pdb.set_trace()
         result = super(MyCustomUserForm, self).save()
 
         if result is not None:
