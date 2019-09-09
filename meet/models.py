@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 class UserMeet(models.Model):
     user = models.OneToOneField(User)
     meet = models.BooleanField(default=False)
+    zoom_meeting_id = models.CharField(max_length=30, default="")
     host_dt = models.DateTimeField(null=True)
 
 def create_usermeet(sender, **kwargs):

@@ -26,8 +26,9 @@ def meet(request):
 
 		cmd = "python3 generateToken.py --key " + key + " --appID 88739b.vidyo.io --userName " + request.user.username +  " --expiresInSecs 1800"
 		print cmd	 
-                token = subprocess.check_output(["python", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip() 
-		context = {"token": token}
+                token = subprocess.check_output(["python", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip()
+                zoom_meeting_id = request.user.usermeet.zoom_meeting_id 
+		context = {"token": token, "zoom_meeting_id": zoom_meeting_id}
 		print token
 		return HttpResponse(template.render(context, request))
 	else:
@@ -58,5 +59,5 @@ def get_all_hosting_users(request):
 
         if user.usermeet.meet:
 		if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
-            		hosts.append({'username' : user.username}) 
+            		hosts.append({'username' : user.username, 'zoom_meeting_id' : user.usermeet.zoom_meeting_id}) 
     return HttpResponse(json.dumps(hosts))
