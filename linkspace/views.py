@@ -19,7 +19,7 @@ from forms import MyCustomUserForm
 
 HOST_MEET_TIMECHECK = 3600
 
-class MyCustomUserFormView(FormView):
+class MyCustomUserFormView(RegistrationView):
     form_class = MyCustomUserForm
     template_name = "registration/registration_form.html" 
     success_url = '/accounts/register/complete'

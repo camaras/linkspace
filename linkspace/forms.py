@@ -13,8 +13,9 @@ class MyCustomUserForm(RegistrationForm):
 
 
 
-    def save(self):
-        result = super(MyCustomUserForm, self).save()
+    def save(self, commit=True):
+        import pdb; pdb.set_trace()
+        result = super(MyCustomUserForm, self).save(commit)
 
         if result is not None:
             user = User.objects.get(username=self.cleaned_data['username'])
@@ -22,7 +23,9 @@ class MyCustomUserForm(RegistrationForm):
             user.usermeet.save()
             user.save()
 
-            return HttpResponse("Ok")
-        else:
-            return HttpResponse(status=404, reason="registration failed") 
+
+        return result
+#            return HttpResponse("Ok")
+#        else:
+#            return HttpResponse(status=404, reason="registration failed") 
  
