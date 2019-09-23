@@ -14,7 +14,6 @@ class MyCustomUserForm(RegistrationForm):
 
 
     def save(self, commit=True):
-        import pdb; pdb.set_trace()
         result = super(MyCustomUserForm, self).save(commit)
 
         if result is not None:
@@ -25,7 +24,4 @@ class MyCustomUserForm(RegistrationForm):
 
 
         return result
-#            return HttpResponse("Ok")
-#        else:
-#            return HttpResponse(status=404, reason="registration failed") 
  
