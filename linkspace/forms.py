@@ -19,6 +19,8 @@ class MyCustomUserForm(RegistrationForm):
         if result is not None:
             user = User.objects.get(username=self.cleaned_data['username'])
             user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
+            user.usermeet.helper = self.cleaned_data['helper']
+            user.usermeet.skills = self.cleaned_data['skills']
             user.usermeet.save()
             user.save()
 

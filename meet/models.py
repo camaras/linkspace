@@ -9,6 +9,8 @@ class UserMeet(models.Model):
     user = models.OneToOneField(User)
     meet = models.BooleanField(default=False)
     zoom_meeting_id = models.CharField(max_length=30, default="")
+    helper = models.BooleanField(default=False)
+    skills = models.CharField(max_length=200, default="")
     host_dt = models.DateTimeField(null=True)
 
 def create_usermeet(sender, **kwargs):

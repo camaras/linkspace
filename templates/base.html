@@ -67,7 +67,7 @@
 	  <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <a class="nav-link" href="{% url 'index' %}">{% trans "Home" %}</a> 
 
-          <span ng-show="login_status">{% trans "Logged in" %}: {{ user.username }}</span> 
+          <span ng-show="login_status" class="nav-link">{% trans "Logged in" %}: {{ user.username }}</span> 
           <a ng-show="login_status" class="nav-link" href ng-click="logout()">{% trans "Log out" %}</a> 
           <a ng-show="login_status" class="nav-link" href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>
 
@@ -78,6 +78,15 @@
               <a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
 
           <hr />
+          <a ng-show="login_status" class="nav-item dropdown nav-link">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Profile </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
+                <a class="dropdown-item nav-link" href="#">{% trans "My account" %}</a> 
+                <a class="dropdown-item nav-link" href ng-click="logout()">{% trans "Log out" %}</a>
+              </div>
+          </a>
+              
           {% endblock %}
        </div>
        <div id="content">

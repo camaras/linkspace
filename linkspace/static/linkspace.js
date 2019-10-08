@@ -49,17 +49,19 @@ app.factory('AuthenticationService',
                     callback(response)
                 });
 	};
-	service.Register = function(username, password1, password2, email, zoom_meeting_id, callback){
+	service.Register = function(username, password1, password2, email, zoom_meeting_id, helper, skills, callback){
 
             var formData = new FormData();
             formData.append("username", username);
             formData.append("password1", password1);
             formData.append("password2", password2);
             formData.append("email", email);
-            formData.append("zoom_meeting_id", zoom_meeting_id);	
+            formData.append("zoom_meeting_id", zoom_meeting_id);
+            formData.append("helper", helper);
+            formData.append("skills", skills);
 
 
-	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "zoom_meeting_id": zoom_meeting_id })})
+	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "zoom_meeting_id": zoom_meeting_id, "helper": helper, "skills": skills })})
 	        .then(function(response){
 		    callback(response);
 		});
@@ -94,7 +96,7 @@ app.controller('LoginController',
 	        })
 	    }
 	    $scope.register = function(){
-		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.zoom_meeting_id, function(response) {
+		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.zoom_meeting_id, $scope.helper, $scope.skills,  function(response) {
                         if (response.statusText == "OK"){
 			    $location.path('accounts/register/complete/');
 		        }
@@ -137,6 +139,29 @@ app.controller('MeetController',
     ['$scope', '$rootScope', function($scope, $rootScope){
 
 
+        /* $.ajax({type:"GET", url: "get_hosting_users", data: { skills: ''}, success: function(data){
+            obj = $.parseJSON(data)
+            $.each(obj, function(key, val){
+                    $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
+                });
+            }}); */
+
+
+        $scope.alert = function(x){
+            alert(x);
+        };
+
+        $scope.click_search = function(){
+            skill = $("#skill").val();
+            $.ajax({type:"GET", url: "get_hosting_users", data: { skill: skill }, success: function(data){
+                obj = $.parseJSON(data)
+                $.each(obj, function(key, val){
+                    $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
+                });
+            }});
+        };
+
+
         $scope.click_connect = function(){
             $("#dropdown-menu").empty();
             $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
@@ -147,34 +172,6 @@ app.controller('MeetController',
                 });
             }});
         };
-
-        $scope.user_click = function($event){
-
-			$scope.setupVidyoClient($event.target.textContent);
-
-            		/* $scope.vidyoConnector.Connect({
-      				host: "prod.vidyo.io",
-      				token:  "cHJvdmlzaW9uAHVzZXIxQDg4NzM5Yi52aWR5by5pbwA2MzcwNTM0ODk4MAAAYTRiMjRkMTBlOWExNGU3OWFlYWNmMjFkM2RiZjhjYzJjN2UzNmVlNTU1MDA2MjY2ODRhYmUyMGNmNzc0MDYyMmVjYWQ3NDQwZDA4NDEzYjljOWNiZjNlMWUwMjRiMjI1",    
-      				displayName: $scope.username,    
-      				resourceId: $event.target.textContent,
-      				onSuccess: () => {
-                                        alert("success");
-         				// successful connection
-      				},
-      				onFailure: (reason) => {
-                                        alert(reason);
-        				// failed to connect, check reason to find out why
-      				},
-      				onDisconnected: (reason) => {
-        				//  disconnected, this can be user triggered as well as error case
-      				}
-
-            		});*/
-
-        };
-
-        $('#dropdown-menu').dropdown('toggle');
-
 
 
         $scope.init_host = function(){
@@ -189,59 +186,6 @@ app.controller('MeetController',
 
         };
 
-        $scope.setupVidyoClient = function(resourceID){
-		VC.CreateVidyoConnector({
-		  viewId: "myvideo",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
-		  viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
-		  remoteParticipants: 15,                        // Maximum number of participants
-		  logFileFilter: "warning all@VidyoConnector info@VidyoClient",
-		  logFileName:"",
-		  userData:""
-		}).then(function(vidyoConnector) {
-		   	$scope.vidyoConnector = vidyoConnector;
-			console.log("connecting to room " + resourceID + " as " + $scope.username + " with token " + $scope.token +"END");
-			$scope.vidyoConnector.RegisterParticipantEventListener({
-				onJoined: function(participant){
-					console.log("Participant Joined " + participant.name );
-
-				},
-				onLeft: function(participant){
-				},
-				onDynamicChanged: function(participants){
-				},
-				onLoudestChanged: function(participant, audioOnly){
-				}
-			}).then(function(){
-				console.log("RegisterParticipantEventListener Success");
-			}).catch(function(){
-				console.err("RegisterParticipantEventListener Failed");
-			});
-			console.log("before token dump");
-			console.log($scope.token);
-            		$scope.vidyoConnector.Connect({
-      				host: "prod.vidyo.io",
-      				token: $scope.token,    
-      				displayName: $scope.username,    
-      				resourceId: resourceID,
-      				onSuccess: () => {
-                                        console.log("Successfull connection");
-         				// successful connection
-      				},
-      				onFailure: (reason) => {
-                                        console.log("failed connect due to " + reason);
-        				// failed to connect, check reason to find out why
-      				},
-      				onDisconnected: (reason) => {
-                                        console.log("disconnected")
-        				//  disconnected, this can be user triggered as well as error case
-      				}
-
-            		});
-		});
-
-
-
-        };
 
     }]);
 
