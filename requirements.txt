@@ -5,8 +5,6 @@ Automat==0.5.0
 boto==2.46.1
 cffi==1.10.0
 constantly==15.1.0
-Couchapp==1.1.0
-cryptography==1.8.1
 cssselect==1.0.1
 Django==1.10.6
 django-annoying==0.10.3
@@ -19,8 +17,6 @@ enum34==1.1.6
 filechunkio==1.8
 google-api-python-client==1.6.2
 graphviz==0.7.1
-gyp==0.1
-gzipstream==0.1.0
 http-parser==0.8.3
 httplib2==0.10.3
 icalendar==3.11.7
@@ -34,7 +30,6 @@ oauth2client==4.0.0
 packaging==16.8
 parsel==1.1.0
 pathtools==0.1.2
-pkg-resources==0.0.0
 pyasn1==0.2.3
 pyasn1-modules==0.0.8
 pycparser==2.17
@@ -60,3 +55,6 @@ warc==0.2.1
 watchdog==0.6.0
 zope.interface==4.4.0
 gunicorn==19.9.0
+dj-database-url>=0.5.0
+psycopg2-binary>=2.7.7
+whitenoise
