@@ -18,7 +18,7 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
       controller : 'LoginController',
       templateUrl : "/accounts/register/"
     })
-    .when("/accounts/register/complete", {
+    .when("/accounts/register/complete/", {
       templateUrl : "/accounts/register/complete/"
     })
     .when("/meet/meet", {
@@ -49,16 +49,17 @@ app.factory('AuthenticationService',
                     callback(response)
                 });
 	};
-	service.Register = function(username, password1, password2, email, callback){
+	service.Register = function(username, password1, password2, email, zoom_meeting_id, callback){
 
             var formData = new FormData();
             formData.append("username", username);
             formData.append("password1", password1);
             formData.append("password2", password2);
-            formData.append("email", email);	
+            formData.append("email", email);
+            formData.append("zoom_meeting_id", zoom_meeting_id);	
 
 
-	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email })})
+	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "zoom_meeting_id": zoom_meeting_id })})
 	        .then(function(response){
 		    callback(response);
 		});
@@ -93,13 +94,13 @@ app.controller('LoginController',
 	        })
 	    }
 	    $scope.register = function(){
-		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, function(response) {
+		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.zoom_meeting_id, function(response) {
                         if (response.statusText == "OK"){
-			    $location.path('accounts/register/complete');
+			    $location.path('accounts/register/complete/');
 		        }
                     }, function(response){
                         if (response.status == 302){
-                            $location.path('accounts/register/complete');
+                            $location.path('accounts/register/complete/');
                         }
                     }
                 )
