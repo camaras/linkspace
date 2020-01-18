@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.template import loader
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate 
 from django.contrib.auth import login as auth_login 
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
+from django.views.generic.edit import FormView
 from meet.models import UserMeet
 from django.db import transaction
 import json
@@ -34,6 +35,72 @@ class MyCustomUserFormView(RegistrationView):
 
     def form_invalid(self, form):
         return super(MyCustomUserFormView, self).form_invalid(form)
+
+
+class AjaxableResponseMixin:
+
+    def get(self, request):
+        user = User.objects.get(username=self.request.user.username)
+        import pdb; pdb.set_trace()
+        data = {
+                'username': self.request.user.username,
+                'email': self.request.user.email,
+                'zoom_meeting_id': user.usermeet.zoom_meeting_id,
+                'helper': user.usermeet.helper,
+                'skills': user.usermeet.skills,
+        }
+        return JsonResponse(data)
+
+
+    def form_valid(self, form):
+        result = super(MyAccountFormView, self).form_valid(form)
+        import pdb; pdb.set_trace()
+        username = self.request.user.username
+
+        user = User.objects.get(username=username)
+        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
+        user.usermeet.helper = self.cleaned_data['helper']
+        user.usermeet.skills = self.cleaned_data['skills']
+        user.usermeet.save()
+        user.save()
+
+        return result
+
+
+    def post(self, commit=True):
+        result = super(FormView, self).post(commit)
+        import pdb; pdb.set_trace()
+        username = self.request.user.username
+        f = self.get_form()
+
+        user = User.objects.get(username=username)
+        user.usermeet.zoom_meeting_id = f.data['zoom_meeting_id']
+        #user.usermeet.helper = f.data['helper']
+        user.usermeet.skills = f.data['skills']
+        user.usermeet.save()
+        user.save()
+
+        return result
+
+    def save(self, commit=True):
+        result = super(MyAccountFormView, self).save(commit)
+        import pdb; pdb.set_trace()
+        username = self.request.user
+
+        user = User.objects.get(username=self.cleaned_data['username'])
+        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
+        user.usermeet.helper = self.cleaned_data['helper']
+        user.usermeet.skills = self.cleaned_data['skills']
+        user.usermeet.save()
+        user.save()
+
+        return result
+
+
+class MyAccountFormView(AjaxableResponseMixin, FormView):
+    form_class = MyCustomUserForm 
+    template_name = "registration/registration_form.html" 
+    success_url = '/accounts/change/complete'
 
 # Create your views here.
 

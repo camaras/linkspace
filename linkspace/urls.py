@@ -25,7 +25,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import *
 from django.contrib.auth import views as auth_views
 from forms import MyCustomUserForm
-from views import MyCustomUserFormView
+from views import MyCustomUserFormView, MyAccountFormView
 from . import views
 
 
@@ -50,6 +50,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/register/$', MyCustomUserFormView.as_view(
         form_class=MyCustomUserForm), name='registration_register'),
+    url(r'^accounts/change/$', MyAccountFormView.as_view(
+        form_class=MyCustomUserForm), name='account'),
                     
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
