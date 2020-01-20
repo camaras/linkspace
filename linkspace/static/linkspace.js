@@ -111,6 +111,55 @@ app.controller('LoginController',
 	}
     ]);
 
+
+app.controller('ModalController',
+    ['$scope', '$rootScope', '$http', 
+        function($scope, $rootScope, $http){
+            $scope.save_failed = false;
+            $rootScope.$on('ModalOpen', function (event){
+            
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/json'}, method: "GET", data: $.param({"email": $scope.email, "zoom_meeting_id": $scope.zoom_meeting_id, "helper": $scope.helper, "skills": $scope.skills })})
+	            .then(function(response){
+                        if (response.status == 200){
+                            $scope.email = response.data.email;
+                            $scope.zoom_meeting_id = response.data.zoom_meeting_id;
+                            $scope.helper = response.data.helper;
+                            $scope.skills = response.data.skills;
+                        } else {
+
+                            $scope.email = "";
+                            $scope.zoom_meeting_id = "";
+                            $scope.helper = "";
+                            $scope.skills = "";
+                        }
+                });
+            }); 
+
+
+            $scope.account = function(){
+                var formData = new FormData();
+                formData.append("email", $scope.email);
+                formData.append("zoom_meeting_id", $scope.zoom_meeting_id);
+                formData.append("helper", $scope.helper);
+                formData.append("skills", $scope.skills);
+
+
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": $scope.email, "zoom_meeting_id": $scope.zoom_meeting_id, "helper": $scope.helper, "skills": $scope.skills })})
+	            .then(function(response){
+                        if (response.status == 200){
+		            $('#accountModal').modal('hide');
+                        } else {
+                            $scope.save_failed = true;
+                        }
+		    })
+
+             };
+
+
+
+        }
+    ]);
+
 app.controller('MenuController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService', 
         function($scope, $rootScope, $location, AuthenticationService){
@@ -132,54 +181,85 @@ app.controller('MenuController',
             })
             };
 
+            $scope.my_account = function(){
+                $scope.save_failed = true;
+                $('#accountModal').modal('show');
+                $rootScope.$emit('ModalOpen', {});
+
+            };
+
+            $scope.account = function(){
+                alert("test");  
+                var formData = new FormData();
+                formData.append("email", email);
+                formData.append("zoom_meeting_id", zoom_meeting_id);
+                formData.append("helper", helper);
+                formData.append("skills", skills);
+
+
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": email, "zoom_meeting_id": zoom_meeting_id, "helper": helper, "skills": skills })})
+	            .then(function(response){
+                        if (response.status == 200){
+                            $('#accountModal').modal('hide');
+                        } else {
+                            $scope.save_failed = true;
+
+ 
+		        }
+                     });
+             };
+
+
+
         }
     ]);
 
+ 
 app.controller('MeetController',
-    ['$scope', '$rootScope', function($scope, $rootScope){
-
-
-        /* $.ajax({type:"GET", url: "get_hosting_users", data: { skills: ''}, success: function(data){
-            obj = $.parseJSON(data)
-            $.each(obj, function(key, val){
-                    $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
-                });
-            }}); */
-
-
-        $scope.alert = function(x){
-            alert(x);
-        };
-
-        $scope.click_search = function(){
-            skill = $("#skill").val();
-            $.ajax({type:"GET", url: "get_hosting_users", data: { skill: skill }, success: function(data){
-                obj = $.parseJSON(data)
-                $.each(obj, function(key, val){
-                    $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
-                });
-            }});
-        };
-
-
-        $scope.click_connect = function(){
-            $("#dropdown-menu").empty();
-            $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
-                obj = $.parseJSON(data)
-                $.each(obj, function(key, val){
-                    $("#dropdown-menu").append('<a class=\"users dropdown-item\" href=\"#\"  ng-click=\"user_click()\">' + val.username + '</a>');
-                    $("#dropdown-menu").dropdown('toggle');
-                });
-            }});
-        };
-
-
-        $scope.init_host = function(){
-                /*document.addEventListener('vidyoclient:ready', (e) => {
-                    $scope.setupVidyoClient(e.detail);
-                }); */
-
-		$.ajax({type:"GET", url: "host", success: function( data ){
+     ['$scope', '$rootScope', function($scope, $rootScope){
+ 
+ 
+         /* $.ajax({type:"GET", url: "get_hosting_users", data: { skills: ''}, success: function(data){
+             obj = $.parseJSON(data)
+             $.each(obj, function(key, val){
+                     $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
+                 });
+             }}); */
+ 
+ 
+         $scope.alert = function(x){
+             alert(x);
+         };
+ 
+         $scope.click_search = function(){
+             skill = $("#skill").val();
+             $.ajax({type:"GET", url: "get_hosting_users", data: { skill: skill }, success: function(data){
+                 obj = $.parseJSON(data)
+                 $.each(obj, function(key, val){
+                     $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
+                 });
+             }});
+         };
+ 
+ 
+         $scope.click_connect = function(){
+             $("#dropdown-menu").empty();
+             $.ajax({type:"GET", url: "get_all_hosting_users", success: function(data){
+                 obj = $.parseJSON(data)
+                 $.each(obj, function(key, val){
+                     $("#dropdown-menu").append('<a class=\"users dropdown-item\" href=\"#\"  ng-click=\"user_click()\">' + val.username + '</a>');
+                     $("#dropdown-menu").dropdown('toggle');
+                 });
+             }});
+         };
+ 
+ 
+         $scope.init_host = function(){
+                 /*document.addEventListener('vidyoclient:ready', (e) => {
+                     $scope.setupVidyoClient(e.detail);
+                 }); */
+ 
+ 		$.ajax({type:"GET", url: "host", success: function( data ){
 
                		$scope.setupVidyoClient($scope.username);
 		}});

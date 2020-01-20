@@ -2,6 +2,11 @@ html {
   margin: 40px auto;
 }
 
+body {
+    background-image: url("https://cdn.clipart.email/f6ecd4d816626347464f6d6edf31afab_fist-bump-shirt-etsy_340-270.jpeg");
+    background-repeat: no-repeat;
+    background-position: right 70% bottom 0%; 
+}
 .btn-search {
 	  background: #424242;
 	  border-radius: 0;
@@ -31,4 +36,5 @@ html {
 
 .host_meeting {
      text-align: center;
+     margin-left: 450px;
 } 
