@@ -1,6 +1,7 @@
 html {
   margin: 40px auto;
 }
+
 .btn-search {
 	  background: #424242;
 	  border-radius: 0;
@@ -9,13 +10,14 @@ html {
 	  border-style: solid;
 	  border-color: #1c1c1c;
 	}
-	.btn-search:link, .btn-search:visited {
+
+.btn-search:link, .btn-search:visited {
 	  color: #fff;
-	}
-	.btn-search:active, .btn-search:hover {
+}
+
+.btn-search:active, .btn-search:hover {
 	  background: #1c1c1c;
 	  color: #fff;
-	}
 }
 
 #navbarDropdownMenuLink-4 {
@@ -25,4 +27,8 @@ html {
 
 .my-dropdown-item {
           color: rgb(0, 123, 255) !important;
+}
+
+.host_meeting {
+     text-align: center;
 } 
