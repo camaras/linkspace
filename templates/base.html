@@ -69,13 +69,13 @@
 
           <span ng-show="login_status">{% trans "Logged in" %}: {{ user.username }}</span> 
           <a ng-show="login_status" class="nav-link" href ng-click="logout()">{% trans "Log out" %}</a> 
-          <a ng-show="login_status" class="nav-link" href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>
+          <a ng-show="login_status" class="nav-link" href="{% url 'password_change' %}">{% trans "Change password" %}</a>
 
           <a ng-show="login_status" class="nav-link" href=/meet/meet>{% trans "Meet" %}</a>
 
           <a ng-show="login_status" class="nav-link" href=/book/book>{% trans "Book" %}</a>
           </span>
-              <a class="nav-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+              <a class="nav-link" href="{% url 'login' %}">{% trans "Log in" %}</a>
 
           <hr />
           {% endblock %}

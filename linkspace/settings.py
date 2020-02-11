@@ -22,9 +22,9 @@ BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  False 
+DEBUG =  True 
 
-ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com']
+ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', 'localhost', '127.0.0.1']
 
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 
@@ -153,7 +153,7 @@ STATICFILES_FINDERS = [
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-print STATIC_ROOT
+print(STATIC_ROOT)
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
@@ -204,6 +204,6 @@ EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
 EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD')
 #EMAIL_USE_SSL = True
 
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)

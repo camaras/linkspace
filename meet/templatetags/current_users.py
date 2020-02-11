@@ -26,13 +26,13 @@ def get_all_logged_in_users():
     # get all users who are hosting meetings
     hosting_users = []
     for u in logged_in_users:
-	logger.info("checking " + u.username)
-	hosting_users.append(u)
-	try:
-            if u.usermeet.meet:
-                hosting_users.append(u)
-	except ObjectDoesNotExist:
-            pass  
+        logger.info("checking " + u.username)
+        hosting_users.append(u)
+    try:
+        if u.usermeet.meet:
+            hosting_users.append(u)
+    except ObjectDoesNotExist:
+        pass  
 
     return hosting_users
 

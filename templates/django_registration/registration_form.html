@@ -1,0 +1,30 @@
+{% extends "registration/login_base.html" %}
+{% load i18n %}
+
+{% block login_content %}
+<h2 class="display-2">Registration</h2>
+<form ng-submit="register()" role = "form" style="display: block;">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <input type="text" name="username" id="id_username" ng-model="username" tabindex="1" class="form-control" placeholder="Username" value="">
+  </div>
+  <div class="form-group">
+    <input type="text" name="email" id="id_email" ng-model="email" tabindex="2" class="form-control" placeholder="Email" value="">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password1" id="id_password1" ng-model="password1" tabindex="3" class="form-control" placeholder="Password">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password2" id="id_password2" ng-model="password2" tabindex="4" class="form-control" placeholder="Password Confirmation">
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="submit" id="register" tabindex="4" class="form-control btn btn-login btn-primary" value="Register">
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

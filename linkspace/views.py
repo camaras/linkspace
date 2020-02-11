@@ -12,8 +12,8 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
-from registration.backends.hmac.views import RegistrationView
-from registration.forms import RegistrationForm
+from django_registration.views import RegistrationView
+from django_registration.forms import RegistrationForm
 
 HOST_MEET_TIMECHECK = 3600
 
