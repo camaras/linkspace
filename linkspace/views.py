@@ -25,8 +25,9 @@ class MyCustomUserFormView(RegistrationView):
     template_name = "registration/registration_form.html" 
     success_url = '/accounts/register/complete'
 
-    def post(self, form):
-        return super(MyCustomUserFormView, self).post(form)
+    def post(self, request):
+        self.request = request
+        return super(MyCustomUserFormView, self).post(request)
 
 
     def form_valid(self, form):
@@ -41,7 +42,6 @@ class AjaxableResponseMixin:
 
     def get(self, request):
         user = User.objects.get(username=self.request.user.username)
-        import pdb; pdb.set_trace()
         data = {
                 'username': self.request.user.username,
                 'email': self.request.user.email,
@@ -54,7 +54,6 @@ class AjaxableResponseMixin:
 
     def form_valid(self, form):
         result = super(MyAccountFormView, self).form_valid(form)
-        import pdb; pdb.set_trace()
         username = self.request.user.username
 
         user = User.objects.get(username=username)
@@ -69,7 +68,6 @@ class AjaxableResponseMixin:
 
     def post(self, commit=True):
         result = super(FormView, self).post(commit)
-        import pdb; pdb.set_trace()
         username = self.request.user.username
         f = self.get_form()
 
@@ -84,7 +82,6 @@ class AjaxableResponseMixin:
 
     def save(self, commit=True):
         result = super(MyAccountFormView, self).save(commit)
-        import pdb; pdb.set_trace()
         username = self.request.user
 
         user = User.objects.get(username=self.cleaned_data['username'])

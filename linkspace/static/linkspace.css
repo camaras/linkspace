@@ -37,4 +37,12 @@ body {
 .host_meeting {
      text-align: center;
      margin-left: 450px;
+}
+
+#id_username {
+    opacity: 0.8;
+}
+
+#id_password {
+    opacity: 0.8;
 } 
