@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from registration.forms import RegistrationForm
+from django_registration.forms import RegistrationForm
 from django import forms
 from django.http import Http404, HttpResponse, JsonResponse
 

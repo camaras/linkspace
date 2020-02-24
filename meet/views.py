@@ -21,15 +21,15 @@ def meet(request):
 	if request.user.is_authenticated:
 		template = loader.get_template('meet/meet.html')
 		#token = get_token(request.user.username, "88739b.vidyo.io" , 18000)
-                #key = open("api.key", "r").read().strip()
-                #key = os.environ["API_KEY"]
+				#key = open("api.key", "r").read().strip()
+				#key = os.environ["API_KEY"]
 
 		#cmd = "python3 generateToken.py --key " + key + " --appID 88739b.vidyo.io --userName " + request.user.username +  " --expiresInSecs 1800"
-		#print cmd	 
-                #token = subprocess.check_output(["python", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip()
-                zoom_meeting_id = request.user.usermeet.zoom_meeting_id 
+		#print(cmd)
+		#token = subprocess.check_output(["python", "generateToken.py", "--key", key, "--appID", "88739b.vidyo.io", "--userName", request.user.username, "--expiresInSecs", "18000"]).strip()
+		zoom_meeting_id = request.user.usermeet.zoom_meeting_id 
 		context = {"zoom_meeting_id": zoom_meeting_id}
-		#print token
+		#print(token)
 		return HttpResponse(template.render(context, request))
 	else:
 		return HttpResponse("Error") 
@@ -47,39 +47,39 @@ def host(request):
 		return Http404("Error")
 
 def time_diff(dt1, dt2):
-    return (dt2-dt1).total_seconds()	
+	return (dt2-dt1).total_seconds()	
 
 def get_all_hosting_users(request):
-    users = User.objects.all()
-    hosts = []
-    for user in users:
+	users = User.objects.all()
+	hosts = []
+	for user in users:
 	# if user is the same as the current user skip 
-        if user.username == request.user.username:
-             continue
+		if user.username == request.user.username:
+			 continue
 
-        if user.usermeet.meet:
-		if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
-            		hosts.append({'username' : user.username, 'zoom_meeting_id' : user.usermeet.zoom_meeting_id}) 
-    return HttpResponse(json.dumps(hosts))
+		if user.usermeet.meet:
+			if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
+				hosts.append({'username' : user.username, 'zoom_meeting_id' : user.usermeet.zoom_meeting_id}) 
+	return HttpResponse(json.dumps(hosts))
 
 def get_hosting_users(request):
-    skill = None
-    skill = request.GET['skill']
-    if skill is None:
-        users = User.objects.all()
-    else:
-        users = User.objects.filter(usermeet__skills__contains=skill)
+	skill = None
+	skill = request.GET['skill']
+	if skill is None:
+		users = User.objects.all()
+	else:
+		users = User.objects.filter(usermeet__skills__contains=skill)
 
-    hosts = []
-    for user in users:
+	hosts = []
+	for user in users:
 	# if user is the same as the current user skip 
-        if user.username == request.user.username:
-             continue
+		if user.username == request.user.username:
+			continue
 
-        if user.usermeet.meet:
-		if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
-            		hosts.append({'username' : user.username, 'zoom_meeting_id' : user.usermeet.zoom_meeting_id}) 
-    return HttpResponse(json.dumps(hosts))
+		if user.usermeet.meet:
+			if user.usermeet.host_dt and time_diff(user.usermeet.host_dt, timezone.now()) < HOST_MEET_TIMECHECK:
+				hosts.append({'username' : user.username, 'zoom_meeting_id' : user.usermeet.zoom_meeting_id}) 
+	return HttpResponse(json.dumps(hosts))
 
 
 

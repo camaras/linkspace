@@ -1,0 +1,48 @@
+html {
+  margin: 40px auto;
+}
+
+body {
+    background-image: url("https://cdn.clipart.email/f6ecd4d816626347464f6d6edf31afab_fist-bump-shirt-etsy_340-270.jpeg");
+    background-repeat: no-repeat;
+    background-position: right 70% bottom 0%; 
+}
+.btn-search {
+	  background: #424242;
+	  border-radius: 0;
+	  color: #fff;
+	  border-width: 1px;
+	  border-style: solid;
+	  border-color: #1c1c1c;
+	}
+
+.btn-search:link, .btn-search:visited {
+	  color: #fff;
+}
+
+.btn-search:active, .btn-search:hover {
+	  background: #1c1c1c;
+	  color: #fff;
+}
+
+#navbarDropdownMenuLink-4 {
+          color: rgb(0, 123, 255);
+          margin-right: 50px;
+}
+
+.my-dropdown-item {
+          color: rgb(0, 123, 255) !important;
+}
+
+.host_meeting {
+     text-align: center;
+     margin-left: 450px;
+}
+
+#id_username {
+    opacity: 0.8;
+}
+
+#id_password {
+    opacity: 0.8;
+} 
