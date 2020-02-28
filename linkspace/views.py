@@ -21,123 +21,123 @@ from .forms import MyCustomUserForm
 HOST_MEET_TIMECHECK = 3600
 
 class MyCustomUserFormView(RegistrationView):
-	form_class = MyCustomUserForm
-	template_name = "registration/registration_form.html" 
-	success_url = '/accounts/register/complete'
+    form_class = MyCustomUserForm
+    template_name = "registration/registration_form.html" 
+    success_url = '/accounts/register/complete'
 
-	def post(self, request):
-		self.request = request
-		return super(MyCustomUserFormView, self).post(request)
+    def post(self, request):
+        self.request = request
+        return super(MyCustomUserFormView, self).post(request)
 
 
-	def form_valid(self, form):
-		form.save()
-		return super(MyCustomUserFormView, self).form_valid(form)
+    def form_valid(self, form):
+        form.save()
+        return super(MyCustomUserFormView, self).form_valid(form)
 
-	def form_invalid(self, form):
-		return super(MyCustomUserFormView, self).form_invalid(form)
+    def form_invalid(self, form):
+        return super(MyCustomUserFormView, self).form_invalid(form)
 
 
 class AjaxableResponseMixin:
 
-	def get(self, request):
-		user = User.objects.get(username=self.request.user.username)
-		data = {
-				'username': self.request.user.username,
-				'email': self.request.user.email,
-				'zoom_meeting_id': user.usermeet.zoom_meeting_id,
-				'helper': user.usermeet.helper,
-				'skills': user.usermeet.skills,
-		}
-		return JsonResponse(data)
+    def get(self, request):
+        user = User.objects.get(username=self.request.user.username)
+        data = {
+                'username': self.request.user.username,
+                'email': self.request.user.email,
+                'zoom_meeting_id': user.usermeet.zoom_meeting_id,
+                'helper': user.usermeet.helper,
+                'skills': user.usermeet.skills,
+        }
+        return JsonResponse(data)
 
 
-	def form_valid(self, form):
-		result = super(MyAccountFormView, self).form_valid(form)
-		username = self.request.user.username
+    def form_valid(self, form):
+        result = super(MyAccountFormView, self).form_valid(form)
+        username = self.request.user.username
 
-		user = User.objects.get(username=username)
-		user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
-		user.usermeet.helper = self.cleaned_data['helper']
-		user.usermeet.skills = self.cleaned_data['skills']
-		user.usermeet.save()
-		user.save()
+        user = User.objects.get(username=username)
+        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
+        user.usermeet.helper = self.cleaned_data['helper']
+        user.usermeet.skills = self.cleaned_data['skills']
+        user.usermeet.save()
+        user.save()
 
-		return result
+        return result
 
 
-	def post(self, commit=True):
-		result = super(FormView, self).post(commit)
-		username = self.request.user.username
-		f = self.get_form()
+    def post(self, commit=True):
+        result = super(FormView, self).post(commit)
+        username = self.request.user.username
+        f = self.get_form()
 
-		user = User.objects.get(username=username)
-		user.usermeet.zoom_meeting_id = f.data['zoom_meeting_id']
-		#user.usermeet.helper = f.data['helper']
-		user.usermeet.skills = f.data['skills']
-		user.usermeet.save()
-		user.save()
+        user = User.objects.get(username=username)
+        user.usermeet.zoom_meeting_id = f.data['zoom_meeting_id']
+        #user.usermeet.helper = f.data['helper']
+        user.usermeet.skills = f.data['skills']
+        user.usermeet.save()
+        user.save()
 
-		return result
+        return result
 
-	def save(self, commit=True):
-		result = super(MyAccountFormView, self).save(commit)
-		username = self.request.user
+    def save(self, commit=True):
+        result = super(MyAccountFormView, self).save(commit)
+        username = self.request.user
 
-		user = User.objects.get(username=self.cleaned_data['username'])
-		user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
-		user.usermeet.helper = self.cleaned_data['helper']
-		user.usermeet.skills = self.cleaned_data['skills']
-		user.usermeet.save()
-		user.save()
+        user = User.objects.get(username=self.cleaned_data['username'])
+        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
+        user.usermeet.helper = self.cleaned_data['helper']
+        user.usermeet.skills = self.cleaned_data['skills']
+        user.usermeet.save()
+        user.save()
 
-		return result
+        return result
 
 
 class MyAccountFormView(AjaxableResponseMixin, FormView):
-	form_class = MyCustomUserForm 
-	template_name = "registration/registration_form.html" 
-	success_url = '/accounts/change/complete'
+    form_class = MyCustomUserForm 
+    template_name = "registration/registration_form.html" 
+    success_url = '/accounts/change/complete'
 
 # Create your views here.
 
 def login(request):
-	if request.method == "POST":
-		json_data = json.loads(request.body)
-		user = authenticate(username = json_data['username'],
-			password = json_data['password'])
-		if user is not None:
-			auth_login(request, user)
-			return HttpResponse("user.usermeet.zoom_meeting_id")
-		else:
-			return HttpResponse(status=404, reason="authentication failed")
-	else:
-		return HttpResponse(status=404, reason="post required")
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        user = authenticate(username = json_data['username'],
+            password = json_data['password'])
+        if user is not None:
+            auth_login(request, user)
+            return HttpResponse("user.usermeet.zoom_meeting_id")
+        else:
+            return HttpResponse(status=404, reason="authentication failed")
+    else:
+        return HttpResponse(status=404, reason="post required")
 
 
 def register(request):
 
-	if request.method == "POST":
-		json_data = json.loads(request.body)
-		username = json_data['username']
-		password = json_data['password']
-		email = json_data['email']
-		rf = RegistrationForm(request.POST)
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        username = json_data['username']
+        password = json_data['password']
+        email = json_data['email']
+        rf = RegistrationForm(request.POST)
 
-		result = register(username = json_data['username'],password = json_data['password'],email = json_data['email'])
-		zoom_meeting_id = json_data['zoom_meeting_id']
-		print("hello")
-		print(zoom_meeting_id)
-				
-		if result is not None:
-			user = User.objects.get(username=request.user.username)
-			user.usermeet.zoom_meeting_id = zoom_meeting_id
-			user.usermeet.save()
-			user.save()
+        result = register(username = json_data['username'],password = json_data['password'],email = json_data['email'])
+        zoom_meeting_id = json_data['zoom_meeting_id']
+        print("hello")
+        print(zoom_meeting_id)
+                
+        if result is not None:
+            user = User.objects.get(username=request.user.username)
+            user.usermeet.zoom_meeting_id = zoom_meeting_id
+            user.usermeet.save()
+            user.save()
 
-			return HttpResponse("Ok")
-		else:
-			return HttpResponse(status=404, reason="registration failed")
-	else:
-		return HttpResponse(status=404, reason="post required")
+            return HttpResponse("Ok")
+        else:
+            return HttpResponse(status=404, reason="registration failed")
+    else:
+        return HttpResponse(status=404, reason="post required")
 

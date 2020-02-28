@@ -7,12 +7,12 @@ from django.utils import timezone
 # Create your views here.
 
 def book(request):
-	if request.user.is_authenticated:
-		template = loader.get_template('book/book.html')
-		context = {}
-		return HttpResponse(template.render(context, request))
-	else:
-		raise Http404("Error") 
+    if request.user.is_authenticated:
+        template = loader.get_template('book/book.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
+    else:
+        raise Http404("Error") 
 
 
 def get_all_logged_in_users():

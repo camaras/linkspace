@@ -49,13 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',	
+    'django.contrib.sites',    
     'rest_framework',
     'schedule',
-    'djangobower',	
+    'djangobower',    
     'meet',
     'book',
-    'linkspace'	
+    'linkspace'    
 ]
 
 MIDDLEWARE = [
@@ -150,7 +150,7 @@ LANGUAGE_BIDI = False
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',	
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',    
     'djangobower.finders.BowerFinder'
 ]
 STATIC_URL = '/static/'
@@ -181,11 +181,11 @@ LOGGING = {
         },
     },
     'loggers': {
-	'': {
+    '': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
-	},
+    },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -196,7 +196,7 @@ LOGGING = {
         'verbose' : {
             'format': '%(levelname)s %(asctime)s %(module)s: %(message)s'
         }
-    } 	
+    }     
 }
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
