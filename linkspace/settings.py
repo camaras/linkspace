@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+print(BASE_DIR)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -24,7 +26,7 @@ SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =  True 
 
-ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', '10.224.209.68',"localhost"]
+ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', '10.224.209.90',"localhost", "linkspace3.herokuapp.com"]
 
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 
@@ -79,7 +81,7 @@ ROOT_URLCONF = 'linkspace.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, '..', 'templates'), os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'linkspace', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, '..', 'templates'), os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'linkspace', 'templates'), os.path.join(BASE_DIR, 'linkspace', 'templates', 'registration')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
