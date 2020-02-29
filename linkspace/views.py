@@ -26,16 +26,17 @@ class MyCustomUserFormView(RegistrationView):
     success_url = '/accounts/register/complete'
 
     def post(self, request):
+
         self.request = request
-        return super(MyCustomUserFormView, self).post(request)
+        return super().post(request)
 
 
     def form_valid(self, form):
         form.save()
-        return super(MyCustomUserFormView, self).form_valid(form)
+        return HttpResponse("Ok") 
 
     def form_invalid(self, form):
-        return super(MyCustomUserFormView, self).form_invalid(form)
+        return HttpResponse(status=404, reason="registration failed") 
 
 
 class AjaxableResponseMixin:
@@ -70,7 +71,6 @@ class AjaxableResponseMixin:
         result = super(FormView, self).post(commit)
         username = self.request.user.username
         f = self.get_form()
-
         user = User.objects.get(username=username)
         user.usermeet.zoom_meeting_id = f.data['zoom_meeting_id']
         #user.usermeet.helper = f.data['helper']

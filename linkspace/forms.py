@@ -13,6 +13,7 @@ class MyCustomUserForm(RegistrationForm):
         super(MyCustomUserForm, self).__init__(*args, **kwargs)
 
     def form_valid(self, form):
+
         form.save()
         response = super(MyCustomUserForm, self).form_valid(form)
         if self.request.is_ajax():
