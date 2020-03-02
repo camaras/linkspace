@@ -33,7 +33,6 @@ class MyCustomUserFormView(RegistrationView):
 
     def form_valid(self, form):
         user = form.save()
-        import pdb; pdb.set_trace()
         if user is not None:
             self.send_activation_email(user)
             return HttpResponse("Ok") 
