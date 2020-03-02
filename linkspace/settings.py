@@ -24,7 +24,7 @@ print(BASE_DIR)
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  True 
+DEBUG = False 
 
 ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', '10.224.209.90',"localhost", "linkspace3.herokuapp.com"]
 
@@ -98,7 +98,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'linkspace.wsgi.application'
 
 SITE_ID = 1
-SITE_URL = "agile-beach-72018.herokuapp.com"
+SITE_URL = "linkspace3.herokuapp.com"
 SITE_NAME = "LinkSpace"
 
 # Database
