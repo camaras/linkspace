@@ -1,0 +1,30 @@
+{% extends "registration/login_base.html" %}
+{% load i18n %}
+
+{% block login_content %}
+<form id="login-form" ng-submit="login()" role = "form" style="display: block;">
+  {% csrf_token %}
+  <div class="form-group">
+    <input type="text" name="username" id="id_username" ng-model="username" tabindex="1" class="form-control" placeholder="Username" value="">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password" id="id_password" ng-model="password" tabindex="2" class="form-control" placeholder="Password">
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login btn-primary" value="Log In">
+      </div>
+    </div>
+    <div ng-if="login_failed" class="alert alert-danger" role="alert">
+      Login Failed
+    </div> 
+  </div>
+
+</form>
+</script>
+<p>{% trans "Forgot password" %}? <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>!</p>
+<p>{% trans "Not member" %}? <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>!</p>
+
+{% endblock %}

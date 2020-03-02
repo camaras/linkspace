@@ -13,7 +13,7 @@ from django.db import transaction
 import json
 import datetime
 from django.utils import timezone
-from django_registration.views import RegistrationView
+from django_registration.backends.activation.views import RegistrationView
 from django_registration.forms import RegistrationForm
 from django.views.generic.edit import FormView
 from .forms import MyCustomUserForm
@@ -32,8 +32,13 @@ class MyCustomUserFormView(RegistrationView):
 
 
     def form_valid(self, form):
-        form.save()
-        return HttpResponse("Ok") 
+        user = form.save()
+        import pdb; pdb.set_trace()
+        if user is not None:
+            self.send_activation_email(user)
+            return HttpResponse("Ok") 
+        else:
+            return HttpResponse(status=404, reason="registration failed") 
 
     def form_invalid(self, form):
         return HttpResponse(status=404, reason="registration failed") 
