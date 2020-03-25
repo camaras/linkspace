@@ -25,9 +25,6 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import *
 from django.contrib.auth import views as auth_views
-from .forms import MyCustomUserForm
-from .views import MyCustomUserFormView, MyAccountFormView
-from . import views
 from django.contrib.auth import views as auth_views
 
 # Serializers define the API representation.
@@ -49,18 +46,12 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/register/$', MyCustomUserFormView.as_view(
-        form_class=MyCustomUserForm), name='registration_register'),
-    url(r'^accounts/change/$', MyAccountFormView.as_view(
-        form_class=MyCustomUserForm), name='account'),
-                    
+    url(r'', include('manage_users.urls')),        
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 
 #    url(r'^$', RedirectView.as_view(url='accounts/login'), name='index'),  
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
-    url(r'^login/$', views.login, name='login_front'),
-    url(r'^register/$', views.register, name='register_front'),
     url(r'^meet/', include('meet.urls')),
     url(r'book/', include('book.urls')),
     url(r'api/', include(router.urls)),
