@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'djangobower',    
     'meet',
     'book',
-    'linkspace'    
+    'linkspace',
+    'manage_users',    
 ]
 
 MIDDLEWARE = [
