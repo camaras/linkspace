@@ -7,25 +7,25 @@
   {% csrf_token %}
 
   <div class="form-group">
-	  <input type="text" name="username" id="id_username" ng-model="username" tabindex="1" class="form-control" placeholder="Username" value=""><p id="username_error"></p>
+	  <input type="text" name="username" id="id_username" ng-model="username" tabindex="1" class="form-control" placeholder="Username" value=""><p class="error alert alert-danger" id="username_error" ng-model="username_error" ng-value="username_error"></p>
   </div>
   <div class="form-group">
-	  <input type="text" name="email" id="id_email" ng-model="email" tabindex="2" class="form-control" placeholder="Email" value=""><p id="email_error"></p>
+	  <input type="text" name="email" id="id_email" ng-model="email" tabindex="2" class="form-control" placeholder="Email" value=""><p class="error alert alert-danger" id="email_error"></p>
   </div>
   <div class="form-group">
-	  <input type="text" name="zoom meeting id" id="zoom_meeting_id" ng-model="zoom_meeting_id" tabindex="3" class="form-control" placeholder="Zoom Meeting ID" value=""><p id="zoom_meeting_id_error"></p>
+	  <input type="text" name="zoom meeting id" id="zoom_meeting_id" ng-model="zoom_meeting_id" tabindex="3" class="form-control" placeholder="Zoom Meeting ID" value=""><p class="error alert alert-danger" id="zoom_meeting_id_error"></p>
   </div>
   <div class="form-group">
-	  <input type="password" name="password1" id="id_password1" ng-model="password1" tabindex="3" class="form-control" placeholder="Password"><p id="password1_error"></p>
+	  <input type="password" name="password1" id="id_password1" ng-model="password1" tabindex="3" class="form-control" placeholder="Password"><p class="error alert alert-danger" id="password1_error" ng-value="password1_error" ></p>
   </div>
   <div class="form-group">
-	  <input type="password" name="password2" id="id_password2" ng-model="password2" tabindex="4" class="form-control" placeholder="Password Confirmation"><p id="password2_error"></p>
+	  <input type="password" name="password2" id="id_password2" ng-model="password2" tabindex="4" class="form-control" placeholder="Password Confirmation"><p class="error alert alert-danger" id="password2_error" ng-value="password2_error"></p>
   </div>
   <div class="form-group">
-	  <div><span>Helper</span><input type="checkbox" name="helper" id="helper" ng-model="helper" tabindex="4" class="form-control"></div><p id="helper_error"></p>
+	  <div><span>Helper</span><input type="checkbox" name="helper" id="helper" ng-model="helper" tabindex="4" class="form-control"></div><p class="error alert alert-danger" id="helper_error" ng-value="helper_error"></p>
   </div>
   <div class="form-group">
-	  <input type="text" name="skills" id="skills" ng-model="skills" tabindex="4" class="form-control" placeholder="Skills....eg. Maths, English"><p id="skills_error"></p>
+	  <input type="text" name="skills" id="skills" ng-model="skills" tabindex="4" class="form-control" placeholder="Skills....eg. Maths, English"><p class="error alert alert-danger" id="skills_error" ng-value="skills_error" ></p>
   </div>
 
   <div class="form-group">

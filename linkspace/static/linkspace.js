@@ -63,11 +63,9 @@ app.factory('AuthenticationService',
 
 	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "zoom_meeting_id": zoom_meeting_id, "helper": helper, "skills": skills })})
 	        .then(function(response){
-                    window.alert("hello");
 		    callback(response);
 		},
 		function(response){
-                    window.alert("hello");
                     callback(response);
 		
 		});
@@ -87,6 +85,8 @@ app.controller('LoginController',
         function($scope, $rootScope, $location, AuthenticationService){
             $scope.login_failed = false;
             $scope.registration_failed = false;
+
+            $(".error").hide();
 
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
@@ -109,13 +109,17 @@ app.controller('LoginController',
 		        }
 			else
                         {
-                            window.alert('hello');				  
                             $scope.registration_failed = true;
 
                             errors = response.data;
 
+                            $(".error").hide();
+                            /* $('.errors').html(''); */
+
                             for (field in errors){
-                                $("#" + field + "_error").html(errors[field][0]);
+                                $('#' + field + "_error").html(errors[field][0]);
+                                $('#' + field + "_error").show();
+                                /* $scope[field + "_error"] = errors[field][0]; */
                             }
 
 
@@ -124,7 +128,6 @@ app.controller('LoginController',
 
                     }, function(response){
 
-                        windows.alert('hello');				  
                         if (response.status == 302){
                             $scope.registration_failed = true;
                             $location.path('accounts/register/');
