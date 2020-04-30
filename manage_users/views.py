@@ -40,7 +40,7 @@ class MyCustomUserFormView(RegistrationView):
             return HttpResponse(status=404, reason="registration failed") 
 
     def form_invalid(self, form):
-        return HttpResponse(status=404, reason="registration failed") 
+        return JsonResponse(form.errors, status=404) 
 
 
 class AjaxableResponseMixin:
