@@ -8,9 +8,9 @@ from django.db.models.signals import post_save
 class UserMeet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     meet = models.BooleanField(default=False)
-    zoom_meeting_id = models.CharField(max_length=30, default="", required=False)
-    helper = models.BooleanField(default=False, required=False)
-    skills = models.CharField(max_length=200, default="", required=False)
+    zoom_meeting_id = models.CharField(max_length=30, default="", blank=True)
+    helper = models.BooleanField(default=False, blank=True)
+    skills = models.CharField(max_length=200, default="", blank=True)
     host_dt = models.DateTimeField(null=True)
     
 def create_usermeet(sender, **kwargs):

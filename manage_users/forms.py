@@ -4,9 +4,9 @@ from django import forms
 from django.http import Http404, HttpResponse, JsonResponse
 
 class MyCustomUserForm(RegistrationForm):
-    zoom_meeting_id = forms.CharField()
-    helper = forms.BooleanField()
-    skills = forms.CharField() 
+    zoom_meeting_id = forms.CharField(required=False)
+    helper = forms.BooleanField(required=False)
+    skills = forms.CharField(required=False) 
 
     def __init__(self, *args, **kwargs):
         self.request  = kwargs.pop('request', None)
