@@ -22,7 +22,7 @@ HOST_MEET_TIMECHECK = 3600
 
 class MyCustomUserFormView(RegistrationView):
     form_class = MyCustomUserForm
-    template_name = "registration/registration_form.html" 
+    template_name = "django_registration/registration_form.html" 
     success_url = '/accounts/register/complete'
 
     def post(self, request):
@@ -100,12 +100,13 @@ class AjaxableResponseMixin:
 
 class MyAccountFormView(AjaxableResponseMixin, FormView):
     form_class = MyCustomUserForm 
-    template_name = "registration/registration_form.html" 
+    template_name = "django_registration/registration_form.html" 
     success_url = '/accounts/change/complete'
 
 # Create your views here.
 
 def login(request):
+    import pdb; pdb.set_trace()
     if request.method == "POST":
         json_data = json.loads(request.body)
         user = authenticate(username = json_data['username'],
