@@ -49,19 +49,19 @@ app.factory('AuthenticationService',
                     callback(response)
                 });
 	};
-	service.Register = function(username, password1, password2, email, zoom_meeting_id, helper, skills, callback){
+	service.Register = function(username, password1, password2, email, meeting_url, helper, skills, callback){
 
             var formData = new FormData();
             formData.append("username", username);
             formData.append("password1", password1);
             formData.append("password2", password2);
             formData.append("email", email);
-            formData.append("zoom_meeting_id", zoom_meeting_id);
+            formData.append("meeting_url", meeting_url);
             formData.append("helper", helper);
             formData.append("skills", skills);
 
 
-	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "zoom_meeting_id": zoom_meeting_id, "helper": helper, "skills": skills })})
+	    $http({url: '/accounts/register/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"username" : username, "password1" : password1, "password2" : password2, "email": email, "meeting_url": meeting_url, "helper": helper, "skills": skills })})
 	        .then(function(response){
 		    callback(response);
 		},
@@ -103,7 +103,7 @@ app.controller('LoginController',
 	        })
 	    }
 	    $scope.register = function(){
-		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.zoom_meeting_id, $scope.helper, $scope.skills,  function(response) {
+		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.meeting_url, $scope.helper, $scope.skills,  function(response) {
                         if (response.statusText == "OK"){
 			    $location.path('accounts/register/complete/');
 		        }
@@ -148,17 +148,17 @@ app.controller('ModalController',
             $scope.save_failed = false;
             $rootScope.$on('ModalOpen', function (event){
             
-	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/json'}, method: "GET", data: $.param({"email": $scope.email, "zoom_meeting_id": $scope.zoom_meeting_id, "helper": $scope.helper, "skills": $scope.skills })})
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/json'}, method: "GET", data: $.param({"email": $scope.email, "meeting_url": $scope.meeting_url, "helper": $scope.helper, "skills": $scope.skills })})
 	            .then(function(response){
                         if (response.status == 200){
                             $scope.email = response.data.email;
-                            $scope.zoom_meeting_id = response.data.zoom_meeting_id;
+                            $scope.meeting_url = response.data.meeting_url;
                             $scope.helper = response.data.helper;
                             $scope.skills = response.data.skills;
                         } else {
 
                             $scope.email = "";
-                            $scope.zoom_meeting_id = "";
+                            $scope.meeting_url = "";
                             $scope.helper = "";
                             $scope.skills = "";
                         }
@@ -169,12 +169,12 @@ app.controller('ModalController',
             $scope.account = function(){
                 var formData = new FormData();
                 formData.append("email", $scope.email);
-                formData.append("zoom_meeting_id", $scope.zoom_meeting_id);
+                formData.append("meeting_url", $scope.meeting_url);
                 formData.append("helper", $scope.helper);
                 formData.append("skills", $scope.skills);
 
 
-	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": $scope.email, "zoom_meeting_id": $scope.zoom_meeting_id, "helper": $scope.helper, "skills": $scope.skills })})
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": $scope.email, "meeting_url": $scope.meeting_url, "helper": $scope.helper, "skills": $scope.skills })})
 	            .then(function(response){
                         if (response.status == 200){
 		            $('#accountModal').modal('hide');
@@ -222,12 +222,12 @@ app.controller('MenuController',
                 alert("test");  
                 var formData = new FormData();
                 formData.append("email", email);
-                formData.append("zoom_meeting_id", zoom_meeting_id);
+                formData.append("meeting_url", meeting_url);
                 formData.append("helper", helper);
                 formData.append("skills", skills);
 
 
-	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": email, "zoom_meeting_id": zoom_meeting_id, "helper": helper, "skills": skills })})
+	        $http({url: '/accounts/change/', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: "POST", data: $.param({"email": email, "meeting_url": meeting_url, "helper": helper, "skills": skills })})
 	            .then(function(response){
                         if (response.status == 200){
                             $('#accountModal').modal('hide');
@@ -266,7 +266,7 @@ app.controller('MeetController',
              $.ajax({type:"GET", url: "get_hosting_users", data: { skill: skill }, success: function(data){
                  obj = $.parseJSON(data)
                  $.each(obj, function(key, val){
-                     $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
+                     $("#hosts").append('<a class=\"users dropdown-item\" href=\"' + val.meeting_url  + ' ng-click=\"user_click()\">' + val.username + '</a>');
                  });
              }});
          };
