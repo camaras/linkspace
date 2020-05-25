@@ -120,7 +120,6 @@ def login(request):
 
 
 def register(request):
-    import pdb; pdb.set_trace()
 
     if request.method == "POST":
         json_data = json.loads(request.body)
