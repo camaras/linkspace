@@ -248,15 +248,6 @@ app.controller('MenuController',
 app.controller('MeetController',
      ['$scope', '$rootScope', function($scope, $rootScope){
  
- 
-         /* $.ajax({type:"GET", url: "get_hosting_users", data: { skills: ''}, success: function(data){
-             obj = $.parseJSON(data)
-             $.each(obj, function(key, val){
-                     $("#hosts").append('<a class=\"users dropdown-item\" href=\"https://us04web.zoom.us/s/\"' + val.zoom_meeting_id  + ' ng-click=\"user_click()\">' + val.username + '</a>');
-                 });
-             }}); */
- 
- 
          $scope.alert = function(x){
              alert(x);
          };

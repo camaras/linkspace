@@ -20,6 +20,8 @@ HOST_MEET_TIMECHECK = 3600
 def meet(request):
     if request.user.is_authenticated:
         template = loader.get_template('meet/meet.html')
+        import pdb; pdb.set_trace()
+
         #token = get_token(request.user.username, "88739b.vidyo.io" , 18000)
                 #key = open("api.key", "r").read().strip()
                 #key = os.environ["API_KEY"]
@@ -63,6 +65,8 @@ def get_all_hosting_users(request):
     return HttpResponse(json.dumps(hosts))
 
 def get_hosting_users(request):
+    import pdb; pdb.set_trace()
+
     skill = None
     skill = request.GET['skill']
     if skill is None:
