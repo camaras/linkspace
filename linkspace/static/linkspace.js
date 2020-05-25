@@ -21,6 +21,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     .when("/accounts/register/complete/", {
       templateUrl : "/accounts/register/complete/"
     })
+    .when("/accounts/activate/complete/", {
+      templateUrl : "/accounts/activate/complete/"
+    }),
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
     })
