@@ -38,7 +38,7 @@ pyOpenSSL==17.0.0
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.4
 queuelib==1.4.2
 Reindent==0.1.1
 restkit==4.2.2
