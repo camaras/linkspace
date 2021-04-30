@@ -42,7 +42,7 @@ PyYAML==3.12
 queuelib==1.4.2
 Reindent==0.1.1
 restkit==4.2.2
-rsa==3.4.2
+rsa==4.7.1
 Scrapy==1.5.0
 service-identity==16.0.0
 six==1.10.0
