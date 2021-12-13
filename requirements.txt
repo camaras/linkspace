@@ -23,7 +23,7 @@ icalendar==3.11.7
 idna==2.5
 incremental==16.10.1
 ipaddress==1.0.18
-lxml==3.7.3
+lxml==4.6.5
 Markdown==2.6.9
 mrjob==0.5.9
 oauth2client==4.0.0
