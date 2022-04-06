@@ -47,7 +47,7 @@ Scrapy==1.5.0
 service-identity==16.0.0
 six==1.10.0
 socketpool==0.5.3
-Twisted==17.1.0
+Twisted==22.2.0
 uritemplate==3.0.0
 virtualenv==15.0.1
 w3lib==1.17.0
