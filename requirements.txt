@@ -43,7 +43,7 @@ queuelib==1.4.2
 Reindent==0.1.1
 restkit==4.2.2
 rsa==3.4.2
-Scrapy==1.5.0
+Scrapy==2.6.2
 service-identity==16.0.0
 six==1.10.0
 socketpool==0.5.3
