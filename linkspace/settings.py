@@ -26,7 +26,7 @@ SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False 
 
-ALLOWED_HOSTS = [u'agile-beach-72018.herokuapp.com', '10.224.209.90',"localhost", "linkspace3.herokuapp.com"]
+ALLOWED_HOSTS = [u"linkspace.webnote.com.au"]
 
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 
@@ -99,7 +99,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'linkspace.wsgi.application'
 
 SITE_ID = 1
-SITE_URL = "linkspace3.herokuapp.com"
+SITE_URL = "linkspace.webnote.com.au"
 SITE_NAME = "LinkSpace"
 
 # Database
@@ -200,13 +200,9 @@ LOGGING = {
     }     
 }
 
-DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.duknow.com'
+DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.webnote.com.au'
 EMAIL_HOST = "127.0.0.1" 
-EMAIL_HOST_PORT = 25
-EMAIL_HOST = os.environ.get('MAILGUN_SMTP_SERVER','')
-EMAIL_HOST_PORT = os.environ.get('MAILGUN_SMTP_PORT', '')
-EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
-EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')
+EMAIL_HOST_PORT = 465 
 EMAIL_USE_TLS = True
 
 import dj_database_url
