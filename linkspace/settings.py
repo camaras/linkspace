@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,9 +25,9 @@ print(BASE_DIR)
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = True 
 
-ALLOWED_HOSTS = [u"linkspace.webnote.com.au"]
+ALLOWED_HOSTS = [u"linkspace.webnote.com.au", "10.167.47.216"]
 
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 
@@ -43,6 +44,7 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'django_pdb', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,10 +58,12 @@ INSTALLED_APPS = [
     'meet',
     'book',
     'linkspace',
+    'webspace',
     'manage_users',    
 ]
 
 MIDDLEWARE = [
+    'linkspace.simplemiddleware.SimpleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_pdb.middleware.PdbMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -179,16 +184,21 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
         },
     },
     'loggers': {
     '': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
     },
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },
@@ -200,7 +210,7 @@ LOGGING = {
     }     
 }
 
-DEFAULT_FROM_EMAIL = 'do_not_reply@linkspace.webnote.com.au'
+DEFAULT_FROM_EMAIL = 'do_not_reply@mmmm.webnote.com.au'
 EMAIL_HOST = "127.0.0.1" 
 EMAIL_HOST_PORT = 465 
 EMAIL_USE_TLS = True

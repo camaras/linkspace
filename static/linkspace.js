@@ -24,6 +24,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
     })
+    .when("/webspace/create_webspace/", {
+      templateUrl : "/webspace/create_webspace/"
+    })
     .when("/book/book", {
       templateUrl : "/book/book"
     });
