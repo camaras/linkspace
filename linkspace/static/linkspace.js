@@ -34,7 +34,6 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-
     $locationProvider.html5Mode({
 	enabled: true,
 	requireBase: false
@@ -247,7 +246,23 @@ app.controller('MenuController',
         }
     ]);
 
- 
+app.controller('WebspaceController', ['$scope', '$rootScope', function($scope, $rootScope){
+
+    $scope.click_create_site = function(){
+
+
+        site_name = $('#site_name').val();
+        admin_email = $('#admin_email').val();
+        admin_password = $('#admin_password').val();
+
+        $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password }, success: function(data){
+            obj = $.parseJSON(data);
+            $.each(obj, function(key, val){
+                $("#create_site_results").append('<div>' + val + '</div>');
+            });
+	}});
+    }}]);
+
 app.controller('MeetController',
      ['$scope', '$rootScope', function($scope, $rootScope){
  
