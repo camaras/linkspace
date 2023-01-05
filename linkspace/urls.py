@@ -43,8 +43,6 @@ class UserViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet) 
 
-import pdb; pdb.set_trace()
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('manage_users.urls')),        

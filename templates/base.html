@@ -69,12 +69,6 @@
 	  <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <a ng-show="login_status" class="nav-link" href="{% url 'index' %}">{% trans "Home" %}</a> 
 
-          <a ng-show="login_status" class="nav-link" href="{% url 'password_change' %}">{% trans "Change password" %}</a>
-
-          <a ng-show="login_status" class="nav-link" href=/meet/meet>{% trans "Meet" %}</a>
-
-          <a ng-show="login_status" class="nav-link" href=/book/book>{% trans "Book" %}</a>
-
           <a ng-show="login_status" class="nav-link" href=/webspace/create_webspace>{% trans "Create Webspace" %}</a>
 
           <a ng-show="login_status" class="nav-link" href ng-click="logout()">{% trans "Log out" %}</a> 

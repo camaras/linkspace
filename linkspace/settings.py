@@ -175,7 +175,7 @@ BOWER_INSTALLED_APPS = (
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
-LOGIN_REDIRECT_URL = '/meet/meet'
+LOGIN_REDIRECT_URL = '/webspace/create_webspace/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 LOGGING = {
