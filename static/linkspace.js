@@ -21,6 +21,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     .when("/accounts/register/complete/", {
       templateUrl : "/accounts/register/complete/"
     })
+    .when("/accounts/password_reset/", {
+      templateUrl : "/accounts/password_reset/"
+    })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
     })
@@ -95,7 +98,7 @@ app.controller('LoginController',
 	            if(response.status == 200){
                         $rootScope.username = $scope.username;
                         $rootScope.$broadcast('Login');
-		        $location.path('meet/meet');
+		        $location.path('webspace/create_webspace/');
 		    }
                     else
                     {
@@ -246,7 +249,7 @@ app.controller('MenuController',
         }
     ]);
 
-app.controller('WebspaceController', ['$scope', '$rootScope', function($scope, $rootScope){
+app.controller('WebspaceController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
 
     $scope.click_create_site = function(){
 
@@ -255,12 +258,44 @@ app.controller('WebspaceController', ['$scope', '$rootScope', function($scope, $
         admin_email = $('#admin_email').val();
         admin_password = $('#admin_password').val();
 
-        $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password }, success: function(data){
-            obj = $.parseJSON(data);
-            $.each(obj, function(key, val){
+
+
+/*        $http({url: '/webspace/create_webspace/', headers: {'Content-Type': 'application/json'}, method: 'POST', data: $.param({ 'site_name': site_name, 'admin_email': admin_email, 'admin_password': admin_password })})
+	            .then(function(response){
+                        if (response.status == 200){
+
+                          $("#create_site_results").append('<div>Successfully create site here <a>' + window.location.href + '/wordpress/' + site_name + '</a></div>');
+
+                          $("#create_site_results").append('<div>The site can be managed here <a>' + window.location.href + '/wordpress/wp-admin.php' + site_name + '</a></div>');
+
+                        } else {
+
+                          $.each(response.data, function(key, val){
+                            $("#create_site_results").append('<div>' + val + '</div>');
+                          })
+                        }
+                    }); */
+
+
+         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password }, success: function(data, textstatus, jqxhr){
+            //obj = $.parseJSON(data);
+            if (jqxhr.status == 200){
+
+                wordpress_root_url = window.location.origin + '/wordpress/';
+                wordpress_site = wordpress_root_url + site_name;
+                wordpress_admin_site = wordpress_root_url + site_name + '/wp-admin.php';
+ 
+                $("#create_site_results").append('<div>Successfully created a site here <a href="' + wordpress_site + '" target="__blank">' + wordpress_site + '</a></div>');
+
+                $("#create_site_results").append('<div>The site can be managed here <a href="' + wordpress_admin_site + '" target="__blank">' + wordpress_admin_site + '</a></div>');
+            } else {
+              $.each(data, function(key, val){
                 $("#create_site_results").append('<div>' + val + '</div>');
-            });
-	}});
+              })
+            }
+            }, error: function(jqxhr, textstatus, error){
+              $("#create_site_results").append('<div> there was an error in creating the site, please contact the helpdesk for help in resolving the issue</div>');
+            }}); 
     }}]);
 
 app.controller('MeetController',

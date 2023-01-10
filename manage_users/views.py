@@ -112,7 +112,6 @@ def login(request):
             password = json_data['password'])
         if user is not None:
             auth_login(request, user)
-            import pdb; pdb.set_trace()
             return HttpResponse("user.usermeet.zoom_meeting_id")
         else:
             return HttpResponse(status=404, reason="authentication failed")

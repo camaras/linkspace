@@ -17,6 +17,7 @@ from django.conf.urls import url
 from .forms import MyCustomUserForm
 from .views import MyCustomUserFormView, MyAccountFormView
 from . import views
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
         form_class=MyCustomUserForm), name='account'),
     url(r'^login/$', views.login, name='login_front'),
     url(r'^register/$', views.register, name='register_front'),
+    url(r'^accounts/password_reset/$', auth_views.PasswordResetView.as_view(template_name="django_registration/password_reset_form.html", success_url = '/'), name='password_reset'),
 ]

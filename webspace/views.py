@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.forms.renderers import DjangoTemplates
 from django.template import loader
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.utils import timezone
@@ -14,6 +14,8 @@ import subprocess
 import os
 from django.views.generic.edit import FormView, ProcessFormView, FormMixin 
 from .forms import CreateWebspaceForm
+from .models import Webspace
+from django.conf import settings 
 # Create your views here.
 
 
@@ -22,19 +24,46 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
     form_class = CreateWebspaceForm
     success_url = "/webspace/create_webspace/"
 
-    def form_valid(self, form):
-        import pdb; pdb.set_trace()
-        form = self.get_form()
-        return form.form_valid(form)
+    def post(self, request, *args, **kwargs):
+      import pdb; pdb.set_trace()
+      super().post(request, *args, **kwargs)
+      username = self.request.user.username
+      user_webspaces = Webspace.objects.filter(user__username=username)
+      form = self.get_form()
+      site_name = form['site_name'].value()
+      admin_email = form['admin_email'].value()
+      admin_password = form['admin_password'].value()
+
+      if len(user_webspaces) >= settings.MAX_WEBSITES_PER_USER:
+          http_response = JsonResponse({"1" : "Error: maximum number of websites per user is {}".format(settings.MAX_WEBSITES_PER_USER)})
+          http_response.status_code = 406
+          return http_response
+
+      import pdb; pdb.set_trace()
+      if site_name in [webspace.site_name for webspace in Webspace.objects.all()]:
+          http_response = JsonResponse({"1" : "Error: {} is already taken".format(site_name)})
+          http_response.status_code = 409
+          return http_response
+
+      output = subprocess.run(["/home/python/create_wordpress", site_name, admin_email, admin_password], capture_output=True)
+      if (output.returncode == 0):
+          user = User.objects.get(username=username)
+          webspace = Webspace(user=user, site_name=site_name, admin_email=admin_email)
+          webspace.save()
+          return JsonResponse({ "one" : "Wordpress successfully installed here {}".format(settings.SITE_URL + "/wordpress/" + site_name), "two" : "Login here to manage the installation: {}".format(settings.SITE_URL + "/wordpress/" + site_name + "/wp-admin.php")})
+      elif ("already" in str(output.stdout) or "exists" in str((output.stdout))):
+          http_response = JsonResponse({"one" : "conflicts in installing  wordpress"})
+          http_response.status_code = 409
+          return http_response
+      else:
+          http_response = JsonResponse({"one" : "Errors in installing wordpress"})
+          http_response.status_code = 409
+          return http_response
+
+      # do update to webspace table here. 
 
     def render_to_response(self, context):
-        import pdb; pdb.set_trace()
-        #template = DjangoTemplates('webspace/webspace.html')
         return HttpResponse(DjangoTemplates().render('webspace/webspace.html', context, request=self.request))
-
-    #def get_context_data(self, **kwargs):
-
-    #    return {} 
 
 
 def create_webspace(request):

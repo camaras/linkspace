@@ -21,6 +21,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     .when("/accounts/register/complete/", {
       templateUrl : "/accounts/register/complete/"
     })
+    .when("/accounts/password_reset/", {
+      templateUrl : "/accounts/password_reset/"
+    })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
     })
@@ -290,6 +293,8 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', function(
                 $("#create_site_results").append('<div>' + val + '</div>');
               })
             }
+            }, error: function(jqxhr, textstatus, error){
+              $("#create_site_results").append('<div> there was an error in creating the site, please contact the helpdesk for help in resolving the issue</div>');
             }}); 
     }}]);
 
