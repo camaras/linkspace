@@ -24,6 +24,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider){
     .when("/accounts/password_reset/", {
       templateUrl : "/accounts/password_reset/"
     })
+    .when("/accounts/password_reset/done/", {
+      templateUrl : "/accounts/password_reset/done/"
+    })
     .when("/meet/meet", {
       templateUrl : "/meet/meet/"
     })
@@ -107,6 +110,18 @@ app.controller('LoginController',
                     } 
 	        })
 	    }
+            $scope.password_reset = function(){
+
+
+              email = $('#id_email').val();
+              
+              $.ajax({type:"POST", url: "/accounts/password_reset/", headers: {'X-CSRFToken': $scope.token}, data: { email: email }, success: function(data, textstatus, jqxhr){
+                if (jqxhr.status == 200){
+                  $location.path('accounts/password_reset/done/');
+                }
+              }});
+            };
+
 	    $scope.register = function(){
 		AuthenticationService.Register($scope.username, $scope.password1, $scope.password2, $scope.email, $scope.zoom_meeting_id, $scope.helper, $scope.skills,  function(response) {
                         if (response.statusText == "OK"){

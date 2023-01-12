@@ -27,5 +27,6 @@ urlpatterns = [
         form_class=MyCustomUserForm), name='account'),
     url(r'^login/$', views.login, name='login_front'),
     url(r'^register/$', views.register, name='register_front'),
-    url(r'^accounts/password_reset/$', auth_views.PasswordResetView.as_view(template_name="django_registration/password_reset_form.html", success_url = '/'), name='password_reset'),
+    url(r'^accounts/password_reset/$', auth_views.PasswordResetView.as_view(template_name="django_registration/password_reset_form.html", success_url = '/accounts/password_reset/done/'), name='password_reset'),
+    url(r'^accounts/password_reset/done/$', auth_views.PasswordResetDoneView.as_view(template_name="django_registration/password_reset_done.html"), name='password_reset_done'),
 ]
