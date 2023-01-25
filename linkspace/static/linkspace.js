@@ -88,6 +88,49 @@ app.factory('AuthenticationService',
    }]
 );
 
+app.directive('loading', ['$http', function($http){
+{  
+     return {  
+         restrict: 'A',  
+         template: '<div class="loading-spiner"><img src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" /> </div>',  
+         link: function (scope, elm, attrs)  
+         {  
+             scope.isLoading = function () {  
+                 return $http.pendingRequests.length > 0;  
+             };  
+  
+             scope.$watch(scope.isLoading, function (v)  
+             {  
+                 if(v){  
+                     elm.show();  
+                 }else{  
+                     elm.hide();  
+                 }  
+             });  
+         }  
+     };  
+ }
+}]);
+
+
+app.controller('LoadingController', ['$scope', '$http', '$element', function($scope, $http, $element){
+
+  $scope.isLoading = function(){
+    return $http.pendingRequests.length > 0;
+  };
+
+  $scope.$watch($scope.isLoading, function(v)
+  {
+    if (v){
+      $($element).show();
+    } else {
+      $($element).hide();
+    }    
+  });
+
+
+}]);
+
 app.controller('LoginController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
         function($scope, $rootScope, $location, AuthenticationService){
@@ -266,34 +309,30 @@ app.controller('MenuController',
 
 app.controller('WebspaceController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
 
+
+    $scope.delete_site = function(site_name){
+
+      $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, success: function(data, textstatus, jqxhr){
+        if (jqxhr.status == 200){
+          $(this).siblings().delete()
+        }
+        else 
+        {
+          alert("delete of website failed"); 
+        }
+
+        }});
+
+    };
+
     $scope.click_create_site = function(){
 
-
+        token = $('#create_webspace_form [name="csrfmiddlewaretoken"]').val();
         site_name = $('#site_name').val();
         admin_email = $('#admin_email').val();
         admin_password = $('#admin_password').val();
 
-
-
-/*        $http({url: '/webspace/create_webspace/', headers: {'Content-Type': 'application/json'}, method: 'POST', data: $.param({ 'site_name': site_name, 'admin_email': admin_email, 'admin_password': admin_password })})
-	            .then(function(response){
-                        if (response.status == 200){
-
-                          $("#create_site_results").append('<div>Successfully create site here <a>' + window.location.href + '/wordpress/' + site_name + '</a></div>');
-
-                          $("#create_site_results").append('<div>The site can be managed here <a>' + window.location.href + '/wordpress/wp-admin.php' + site_name + '</a></div>');
-
-                        } else {
-
-                          $.each(response.data, function(key, val){
-                            $("#create_site_results").append('<div>' + val + '</div>');
-                          })
-                        }
-                    }); */
-
-
-         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password }, success: function(data, textstatus, jqxhr){
-            //obj = $.parseJSON(data);
+        $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){
 
                 wordpress_root_url = window.location.origin + '/wordpress/';

@@ -33,7 +33,7 @@ SESSION_ENGINE='django.contrib.sessions.backends.db'
 
 SESSION_SAVE_EVERY_REQUEST=True
 
-MAX_WEBSITES_PER_USER=2
+MAX_WEBSITES_PER_USER=15
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': {
@@ -106,6 +106,7 @@ WSGI_APPLICATION = 'linkspace.wsgi.application'
 
 SITE_ID = 1
 SITE_URL = "linkspace.webnote.com.au"
+WORDPRESS_URL_BASE = SITE_URL + "/wordpress"
 SITE_NAME = "LinkSpace"
 
 # Database
@@ -211,7 +212,7 @@ LOGGING = {
     }     
 }
 
-DEFAULT_FROM_EMAIL = 'do_not_reply@mmmm.webnote.com.au'
+DEFAULT_FROM_EMAIL = 'do_not_reply@holiday.webnote.com.au'
 EMAIL_HOST = "127.0.0.1" 
 EMAIL_HOST_PORT = 465 
 EMAIL_USE_TLS = True

@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render
 from django.forms.renderers import DjangoTemplates
 from django.template import loader
@@ -15,7 +17,8 @@ import os
 from django.views.generic.edit import FormView, ProcessFormView, FormMixin 
 from .forms import CreateWebspaceForm
 from .models import Webspace
-from django.conf import settings 
+from django.conf import settings
+from django.http import QueryDict 
 # Create your views here.
 
 
@@ -25,7 +28,6 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
     success_url = "/webspace/create_webspace/"
 
     def post(self, request, *args, **kwargs):
-      import pdb; pdb.set_trace()
       super().post(request, *args, **kwargs)
       username = self.request.user.username
       user_webspaces = Webspace.objects.filter(user__username=username)
@@ -39,7 +41,6 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           http_response.status_code = 406
           return http_response
 
-      import pdb; pdb.set_trace()
       if site_name in [webspace.site_name for webspace in Webspace.objects.all()]:
           http_response = JsonResponse({"1" : "Error: {} is already taken".format(site_name)})
           http_response.status_code = 409
@@ -66,12 +67,48 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
         return HttpResponse(DjangoTemplates().render('webspace/webspace.html', context, request=self.request))
 
 
+    @method_decorator(ensure_csrf_cookie)
+    def get(self, request, *args, **kwargs):
+
+      super().get(request, *args, **kwargs)
+      username = self.request.user.username
+      user_webspaces = Webspace.objects.filter(user__username=username)
+      webspace_urls = [] 
+      for webspace in user_webspaces:
+        webspace_urls.append(
+          { 
+            "name" : webspace.site_name,
+            "site" : settings.WORDPRESS_URL_BASE + "/" + webspace.site_name, 
+            "admin_site" : settings.WORDPRESS_URL_BASE + "/" + webspace.site_name + "/wp-admin.php"
+          }) 
+
+      return self.render_to_response({"webspaces": webspace_urls})
+
+    @method_decorator(ensure_csrf_cookie)
+    def delete(self, request, *args, **kwargs):
+      username = self.request.user.username
+      query_params = QueryDict(request.body)
+      site_name = query_params['site_name']
+
+      import pdb; pdb.set_trace()
+      user_webspace = Webspace.objects.filter(user__username=username).filter(site_name=site_name)
+
+      if len(user_webspace) == 1:
+          user_webspace.delete()
+          return JsonResponse({})
+
+
+      http_response = JsonResponse({"error" : "Errors in installing wordpress"})
+      http_response.status_code = 500 
+      return http_response
+
 def create_webspace(request):
     if request.user.is_authenticated:
         template = loader.get_template('webspace/webspace.html')
         return HttpResponse(template.render(request=request))
     else:
         return HttpResponse("Error") 
+
 
 def submit_create_webspace(request):
     if request.user.is_authenticated:
