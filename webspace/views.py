@@ -51,7 +51,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           user = User.objects.get(username=username)
           webspace = Webspace(user=user, site_name=site_name, admin_email=admin_email)
           webspace.save()
-          return JsonResponse({ "one" : "Wordpress successfully installed here {}".format(settings.SITE_URL + "/wordpress/" + site_name), "two" : "Login here to manage the installation: {}".format(settings.SITE_URL + "/wordpress/" + site_name + "/wp-admin.php")})
+          return JsonResponse({ "site_name" : site_name, "site_url" : settings.SITE_URL + "/wordpress/" + site_name, "admin_site_url" : settings.SITE_URL + "/wordpress/" + site_name + "/wp-admin.php"})
       elif ("already" in str(output.stdout) or "exists" in str((output.stdout))):
           http_response = JsonResponse({"one" : "conflicts in installing  wordpress"})
           http_response.status_code = 409

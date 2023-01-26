@@ -5,14 +5,18 @@
       .form-group {margin-bottom: 1rem; width: 20rem;} 
     </style>
     <div>
-      <h4 class="text-primary center">Your existing Websites</h4>
+      {% if webspaces|length > 0 %}<h4 class="text-primary center">Your Websites</h4>{% endif %}
       <div class="container" id="website_list">
-      <div class="table">
-      {% for webspace in webspaces %}
-          <span class="text-primary table-cell" >Name : </span><span class="table-cell"></span><span class="table-cell">{{ webspace.name }}</span><button class="btn btn red" ng-click="delete_site('{{ webspace.name }}')">Delete Site</button></span></div>
-          <span class="text-primary table-cell" >Site : </span><span class="table-cell"><a class="text-info" href="{{ webspace.site }}">{{ webspace.site }}</a></span></div>
-          <span class="text-primary table-cell" >Admin Site : </span><span class="table-cell"><a class="text-info" href="{{ webspace.admin_site }}">{{ webspace.admin_site }}</a></span></div>
-      {% endfor %}
+        <table class="table">
+        <thead>
+          <tr><th scope="col">Site Name</th><th scope="col">Site Link</th><th scope="col">Site Admin Link</th></tr> 
+        </thead>
+        <tbody id="website_table_body">
+        {% for webspace in webspaces %}
+          <tr id="{{ webspace.name}}"><td class="table-cell text-info">{{ webspace.name }}</td><td><a class="text-info" href="{{ webspace.site }}">{{ webspace.site }}</a></td><td><a class="text-info" href="{{ webspace.admin_site }}">{{ webspace.admin_site }}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site('{{ webspace.name }}')">Delete Site</button></td></tr>
+        {% endfor %}
+        </tbody>
+        </table>
       </div>
     </div>
     <p class="text-info text-center"> Fill in details of the website you will like to create and click on Create Site </p> 

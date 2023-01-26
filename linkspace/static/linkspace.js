@@ -88,38 +88,13 @@ app.factory('AuthenticationService',
    }]
 );
 
-app.directive('loading', ['$http', function($http){
-{  
-     return {  
-         restrict: 'A',  
-         template: '<div class="loading-spiner"><img src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" /> </div>',  
-         link: function (scope, elm, attrs)  
-         {  
-             scope.isLoading = function () {  
-                 return $http.pendingRequests.length > 0;  
-             };  
-  
-             scope.$watch(scope.isLoading, function (v)  
-             {  
-                 if(v){  
-                     elm.show();  
-                 }else{  
-                     elm.hide();  
-                 }  
-             });  
-         }  
-     };  
- }
-}]);
+app.controller('LoadingController', ['$scope', '$rootScope', '$http', '$element', function($scope, $rootScope, $http, $element){
 
-
-app.controller('LoadingController', ['$scope', '$http', '$element', function($scope, $http, $element){
-
-  $scope.isLoading = function(){
-    return $http.pendingRequests.length > 0;
+  $rootScope.isLoading = function(){
+    return jQuery.active > 0;
   };
 
-  $scope.$watch($scope.isLoading, function(v)
+  $rootScope.$watch($scope.isLoading, function(v)
   {
     if (v){
       $($element).show();
@@ -307,18 +282,19 @@ app.controller('MenuController',
         }
     ]);
 
-app.controller('WebspaceController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
+app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$location', '$route', function($scope, $rootScope, $http, $location, $route){
 
 
     $scope.delete_site = function(site_name){
 
-      $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, success: function(data, textstatus, jqxhr){
+      $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, complete: function(jqxhr, textstatus){
         if (jqxhr.status == 200){
-          $(this).siblings().delete()
+          alert("Successfully deleted website " + site_name);
+          $("#"+site_name).remove();
         }
         else 
         {
-          alert("delete of website failed"); 
+          alert("Deletion of website failed"); 
         }
 
         }});
@@ -334,14 +310,13 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', function(
 
         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){
+              alert("Successfully created website" + site_name);
+              site_name = data["site_name"];
+              site_url = data["site_url"];
+              admin_site_url = data["admin_site_url"];
+              $("#website_table_body").append(
+                `<tr id="${site_name}"><td class="table-cell text-info">${site_name}</td><td><a class="text-info" href="${site_url}">${site_url}</a></td><td><a class="text-info" href="${admin_site_url}">${admin_site_url}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site('${ site_name }')">Delete Site</button></td></tr>`);
 
-                wordpress_root_url = window.location.origin + '/wordpress/';
-                wordpress_site = wordpress_root_url + site_name;
-                wordpress_admin_site = wordpress_root_url + site_name + '/wp-admin.php';
- 
-                $("#create_site_results").append('<div>Successfully created a site here <a href="' + wordpress_site + '" target="__blank">' + wordpress_site + '</a></div>');
-
-                $("#create_site_results").append('<div>The site can be managed here <a href="' + wordpress_admin_site + '" target="__blank">' + wordpress_admin_site + '</a></div>');
             } else {
               $.each(data, function(key, val){
                 $("#create_site_results").append('<div>' + val + '</div>');
