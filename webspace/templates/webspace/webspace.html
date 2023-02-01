@@ -1,24 +1,25 @@
 {% block content %}
+
   <div ng-controller="WebspaceController" ng-init="token='{{ csrf_token }}'">	
     <h1 class="text-primary center"> WebSpace </h1>
     <style>
       .form-group {margin-bottom: 1rem; width: 20rem;} 
     </style>
-    <div>
-      {% if webspaces|length > 0 %}<h4 class="text-primary center">Your Websites</h4>{% endif %}
+    {% verbatim %} 
+    <div ng-if="websites.length > 0">
+      <h4 class="text-primary center">Your Websites</h4>
       <div class="container" id="website_list">
         <table class="table">
         <thead>
           <tr><th scope="col">Site Name</th><th scope="col">Site Link</th><th scope="col">Site Admin Link</th></tr> 
         </thead>
         <tbody id="website_table_body">
-        {% verbatim %}
-          <tr ng-repeat="website in websites" id="{{website.name}}"><td class="table-cell text-info">{{website.name}}</td><td><a class="text-info" href="{{website.site}}">{{website.site}}</a></td><td><a class="text-info" href="{{website.admin_site}}">{{website.admin_site}}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site('{{website.name}}')">Delete Site</button></td></tr>
-        {% endverbatim %}
+          <tr ng-repeat="website in websites" id="{{website.name}}"><td class="table-cell text-info">{{website.name}}</td><td><a class="text-info" href="{{website.site}}">{{website.site}}</a></td><td><a class="text-info" href="{{website.admin_site}}">{{website.admin_site}}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site($event)">Delete Site</button></td></tr>
         </tbody>
         </table>
       </div>
     </div>
+    {% endverbatim %}
     <p class="text-info text-center"> Fill in details of the website you will like to create and click on Create Site </p> 
     <form id="create_webspace_form" action="webspace/create_webspace">{% csrf_token %}
       <div class="container">

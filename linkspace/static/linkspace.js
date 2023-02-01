@@ -116,6 +116,7 @@ app.controller('LoginController',
             $scope.registration_failed = false;
 
             $(".error").hide();
+            $("#loader1").hide();
 
 	    $scope.login = function(){
 	        AuthenticationService.Login($scope.username, $scope.password, function(response) {
@@ -291,21 +292,23 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
 
       $scope.websites = data.websites;
       $scope.$apply();
+      $scope.$compile();
       $("#loader1").hide();
 
     }});
     
 
-    $scope.delete_site = function(site_name){
+    $scope.delete_site = function($event){
 
+      site_name = $($event.currentTarget).parent().parent().attr('id');
+      /* site_name2 = $($element).parent().parent().name */
       $("#loader1").show();
       $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, complete: function(jqxhr, textstatus){
         if (jqxhr.status == 200){
           alert("Successfully deleted website " + site_name);
-          $("#"+site_name).remove();
-          $rootScope.test = !$rootScope.test; 
-          $rootScope.$digest();
-          $rootScope.$apply();
+          deleted_site_index = $scope.websites.findIndex(element => element.name == site_name);
+          $scope.websites.splice(deleted_site_index, 1); 
+          $scope.$apply();
           $("#loader1").hide();
         }
         else 
@@ -328,16 +331,23 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
         $("#loader1").show();
         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){
-              alert("Successfully created website" + site_name);
+              alert("Successfully created website " + site_name);
               site_name = data["site_name"];
               site_url = data["site_url"];
               admin_site_url = data["admin_site_url"];
-              $("#website_table_body").append(
-                `<tr id="${site_name}"><td class="table-cell text-info">${site_name}</td><td><a class="text-info" href="${site_url}">${site_url}</a></td><td><a class="text-info" href="${admin_site_url}">${admin_site_url}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site('${ site_name }')">Delete Site</button></td></tr>`);
+
+              $scope.websites.push({ 
+                'name' : site_name,
+                'site' : site_url,
+                'admin_site' : admin_site_url
+              });
+
+              $scope.$apply();
+              $('#site_name').val("");
+              $('#admin_email').val("");
+              $('#admin_password').val(""); 
+ 
               $("#loader1").hide();
-              $location.path("webspace/create_webspace/");
-              $route.reload();
-              $compile($element, $scope);
 
             } else {
               $.each(data, function(key, val){
@@ -346,7 +356,7 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
             }
             }, error: function(jqxhr, textstatus, error){
               $("#create_site_results").append('<div> there was an error in creating the site, please contact the helpdesk for help in resolving the issue</div>');
-              $("#loader1").show();
+              $("#loader1").hide();
             }}); 
     }}]);
 
