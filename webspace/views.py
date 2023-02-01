@@ -29,7 +29,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
 
     def post(self, request, *args, **kwargs):
       super().post(request, *args, **kwargs)
-      username = self.request.user.username
+      username = request.user.username
       user_webspaces = Webspace.objects.filter(user__username=username)
       form = self.get_form()
       site_name = form['site_name'].value()
@@ -90,7 +90,6 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
       query_params = QueryDict(request.body)
       site_name = query_params['site_name']
 
-      import pdb; pdb.set_trace()
       user_webspace = Webspace.objects.filter(user__username=username).filter(site_name=site_name)
 
       if len(user_webspace) == 1:
@@ -102,13 +101,21 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
       http_response.status_code = 500 
       return http_response
 
-def create_webspace(request):
+def get_webspaces(request):
     if request.user.is_authenticated:
-        template = loader.get_template('webspace/webspace.html')
-        return HttpResponse(template.render(request=request))
-    else:
-        return HttpResponse("Error") 
 
+      username = request.user.username
+      user_webspaces = Webspace.objects.filter(user__username=username)
+      webspace_urls = [] 
+      for webspace in user_webspaces:
+        webspace_urls.append(
+          { 
+            "name" : webspace.site_name,
+            "site" : settings.WORDPRESS_URL_BASE + "/" + webspace.site_name, 
+            "admin_site" : settings.WORDPRESS_URL_BASE + "/" + webspace.site_name + "/wp-admin.php"
+          }) 
+
+      return JsonResponse({"websites" : webspace_urls})
 
 def submit_create_webspace(request):
     if request.user.is_authenticated:

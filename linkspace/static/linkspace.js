@@ -90,11 +90,11 @@ app.factory('AuthenticationService',
 
 app.controller('LoadingController', ['$scope', '$rootScope', '$http', '$element', function($scope, $rootScope, $http, $element){
 
-  $rootScope.isLoading = function(){
+  $scope.isLoading = function(){
     return jQuery.active > 0;
   };
 
-  $rootScope.$watch($scope.isLoading, function(v)
+  $scope.$watch($scope.isLoading, function(v)
   {
     if (v){
       $($element).show();
@@ -102,6 +102,9 @@ app.controller('LoadingController', ['$scope', '$rootScope', '$http', '$element'
       $($element).hide();
     }    
   });
+
+  $scope.test = true;
+  $scope.$watch($scope.test, function(v) {});
 
 
 }]);
@@ -152,12 +155,10 @@ app.controller('LoginController',
                             errors = response.data;
 
                             $(".error").hide();
-                            /* $('.errors').html(''); */
 
                             for (field in errors){
                                 $('#' + field + "_error").html(errors[field][0]);
                                 $('#' + field + "_error").show();
-                                /* $scope[field + "_error"] = errors[field][0]; */
                             }
 
 
@@ -282,19 +283,35 @@ app.controller('MenuController',
         }
     ]);
 
-app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$location', '$route', function($scope, $rootScope, $http, $location, $route){
+app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$location', '$route', '$compile', '$element', function($scope, $rootScope, $http, $location, $route, $compile, $element){
 
+    $scope.websites = [];
+
+    $.ajax({type:"GET", url: "/webspace/webspaces/", headers: {'X-CSRFToken': $scope.token}, success: function(data){
+
+      $scope.websites = data.websites;
+      $scope.$apply();
+      $("#loader1").hide();
+
+    }});
+    
 
     $scope.delete_site = function(site_name){
 
+      $("#loader1").show();
       $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, complete: function(jqxhr, textstatus){
         if (jqxhr.status == 200){
           alert("Successfully deleted website " + site_name);
           $("#"+site_name).remove();
+          $rootScope.test = !$rootScope.test; 
+          $rootScope.$digest();
+          $rootScope.$apply();
+          $("#loader1").hide();
         }
         else 
         {
           alert("Deletion of website failed"); 
+          $("#loader1").hide();
         }
 
         }});
@@ -308,6 +325,7 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
         admin_email = $('#admin_email').val();
         admin_password = $('#admin_password').val();
 
+        $("#loader1").show();
         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){
               alert("Successfully created website" + site_name);
@@ -316,6 +334,10 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
               admin_site_url = data["admin_site_url"];
               $("#website_table_body").append(
                 `<tr id="${site_name}"><td class="table-cell text-info">${site_name}</td><td><a class="text-info" href="${site_url}">${site_url}</a></td><td><a class="text-info" href="${admin_site_url}">${admin_site_url}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site('${ site_name }')">Delete Site</button></td></tr>`);
+              $("#loader1").hide();
+              $location.path("webspace/create_webspace/");
+              $route.reload();
+              $compile($element, $scope);
 
             } else {
               $.each(data, function(key, val){
@@ -324,6 +346,7 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
             }
             }, error: function(jqxhr, textstatus, error){
               $("#create_site_results").append('<div> there was an error in creating the site, please contact the helpdesk for help in resolving the issue</div>');
+              $("#loader1").show();
             }}); 
     }}]);
 
