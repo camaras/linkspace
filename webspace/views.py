@@ -46,7 +46,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           http_response.status_code = 409
           return http_response
 
-      output = subprocess.run(["/home/python/create_wordpress", site_name, admin_email, admin_password], capture_output=True)
+      output = subprocess.run([settings.CREATE_WORDPRESS_SCRIPT, site_name, admin_email, admin_password], capture_output=True)
       if (output.returncode == 0):
           user = User.objects.get(username=username)
           webspace = Webspace(user=user, site_name=site_name, admin_email=admin_email)
