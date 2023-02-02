@@ -50,51 +50,22 @@ class AjaxableResponseMixin:
         data = {
                 'username': self.request.user.username,
                 'email': self.request.user.email,
-                'zoom_meeting_id': user.usermeet.zoom_meeting_id,
-                'helper': user.usermeet.helper,
-                'skills': user.usermeet.skills,
         }
         return JsonResponse(data)
 
 
     def form_valid(self, form):
         result = super(MyAccountFormView, self).form_valid(form)
-        username = self.request.user.username
-
-        user = User.objects.get(username=username)
-        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
-        user.usermeet.helper = self.cleaned_data['helper']
-        user.usermeet.skills = self.cleaned_data['skills']
-        user.usermeet.save()
-        user.save()
 
         return result
 
 
     def post(self, commit=True):
         result = super(FormView, self).post(commit)
-        username = self.request.user.username
-        f = self.get_form()
-        user = User.objects.get(username=username)
-        user.usermeet.zoom_meeting_id = f.data['zoom_meeting_id']
-        #user.usermeet.helper = f.data['helper']
-        user.usermeet.skills = f.data['skills']
-        user.usermeet.save()
-        user.save()
-
         return result
 
     def save(self, commit=True):
         result = super(MyAccountFormView, self).save(commit)
-        username = self.request.user
-
-        user = User.objects.get(username=self.cleaned_data['username'])
-        user.usermeet.zoom_meeting_id = self.cleaned_data['zoom_meeting_id']
-        user.usermeet.helper = self.cleaned_data['helper']
-        user.usermeet.skills = self.cleaned_data['skills']
-        user.usermeet.save()
-        user.save()
-
         return result
 
 
@@ -112,7 +83,7 @@ def login(request):
             password = json_data['password'])
         if user is not None:
             auth_login(request, user)
-            return HttpResponse("user.usermeet.zoom_meeting_id")
+            return HttpResponse("ok")
         else:
             return HttpResponse(status=404, reason="authentication failed")
     else:
@@ -129,15 +100,8 @@ def register(request):
         rf = RegistrationForm(request.POST)
 
         result = register(username = json_data['username'],password = json_data['password'],email = json_data['email'])
-        zoom_meeting_id = json_data['zoom_meeting_id']
-        print("hello")
-        print(zoom_meeting_id)
                 
         if result is not None:
-            user = User.objects.get(username=request.user.username)
-            user.usermeet.zoom_meeting_id = zoom_meeting_id
-            user.usermeet.save()
-            user.save()
 
             return HttpResponse("Ok")
         else:
