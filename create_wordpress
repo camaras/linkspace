@@ -1,0 +1,68 @@
+#!/bin/bash
+base_url="webnote.com.au/dev"
+base_webfolder="/var/www/html/wordpress"
+wp_cli="/home/python/bin/wp-cli.phar"
+mysql_defaults_file="/home/python/mysql.cnf"
+
+cd base_webfolder   
+mkdir $1
+cd $1
+$wp_cli core download
+if [ $? -ne 0 ]; then
+	echo "wordpress download failed\n"
+fi
+mysql --defaults-file=$mysql_defaults_file -e "create database $1"
+
+if [ $? -ne 0 ]; then
+	echo "wordpress database creation failed\n"
+	exit 1
+fi
+
+pw=`openssl rand -base64 12`
+pw="^^$pw"
+mysql --defaults-file=$mysql_defaults_file -e "create user '$1'@'localhost' identified by '$pw'"
+
+if [ $? -ne 0 ]; then
+	echo "create user failed\n"
+	exit 1
+fi
+mysql --defaults-file=$mysql_defaults_file -e "grant create,select,update,insert,delete on $1.* to '$1'@'localhost'"
+
+
+if [ $? -ne 0 ]; then
+	echo "create user failed\n"
+	exit 1
+fi
+
+mysql --defaults-file=$mysql_defaults_file -e "flush privileges"
+
+if [ $? -ne 0 ]; then
+	echo "create user failed\n"
+	exit 1
+fi
+
+$wp_cli config create --dbname="$1" --dbuser="$1" --dbpass="$pw"
+
+if [ $? -ne 0 ]; then
+	echo "create config failed\n"
+	exit 1
+fi
+
+$wp_cli core install --url="$base_url/$1" --title="$1" --admin_user="$1_admin" --admin_email=$2 --admin_password=$3
+
+
+if [ $? -ne 0 ]; then
+	echo "create config failed\n"
+	exit 1
+fi
+
+chmod 400 wp-config.php 
+
+
+if [ $? -ne 0 ]; then
+	echo "create config failed\n"
+	exit 1
+fi
+
+echo "wordpress successfully installed at $base_url/$1\n"
+
