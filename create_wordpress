@@ -1,17 +1,34 @@
 #!/bin/bash
-base_url="webnote.com.au/dev"
+base_url="wordpress.webnote.com.au/wordpress"
+site_url="https://$base_url/$4/$1"
 base_webfolder="/var/www/html/wordpress"
-wp_cli="/home/python/bin/wp-cli.phar"
-mysql_defaults_file="/home/python/mysql.cnf"
+wp_cli="/home/linkspace/bin/wp-cli.phar"
+mysql_defaults_file="/home/linkspace/mysql.cnf"
 
-cd base_webfolder   
+cd $base_webfolder
+if [ ! -d $4 ]; then 
+  mkdir $4
+  if [ $? -ne 0 ]; then
+    echo "creating folder $4 failed\n"
+    exit 1
+  fi 
+fi
+cd $4
 mkdir $1
+
+if [ $? -ne 0 ]; then
+  echo "creating folder $1 failed\n"
+  exit 1
+fi 
 cd $1
 $wp_cli core download
 if [ $? -ne 0 ]; then
 	echo "wordpress download failed\n"
 fi
-mysql --defaults-file=$mysql_defaults_file -e "create database $1"
+
+
+namespace="$4_$1"
+mysql --defaults-file=$mysql_defaults_file -e "create database $namespace"
 
 if [ $? -ne 0 ]; then
 	echo "wordpress database creation failed\n"
@@ -20,13 +37,13 @@ fi
 
 pw=`openssl rand -base64 12`
 pw="^^$pw"
-mysql --defaults-file=$mysql_defaults_file -e "create user '$1'@'localhost' identified by '$pw'"
+mysql --defaults-file=$mysql_defaults_file -e "create user '$namespace'@'localhost' identified by '$pw'"
 
 if [ $? -ne 0 ]; then
 	echo "create user failed\n"
 	exit 1
 fi
-mysql --defaults-file=$mysql_defaults_file -e "grant create,select,update,insert,delete on $1.* to '$1'@'localhost'"
+mysql --defaults-file=$mysql_defaults_file -e "grant create,select,update,insert,delete on $namespace.* to '$namespace'@'localhost'"
 
 
 if [ $? -ne 0 ]; then
@@ -41,14 +58,14 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-$wp_cli config create --dbname="$1" --dbuser="$1" --dbpass="$pw"
+$wp_cli config create --dbname="$namespace" --dbuser="$namespace" --dbpass="$pw"
 
 if [ $? -ne 0 ]; then
 	echo "create config failed\n"
 	exit 1
 fi
 
-$wp_cli core install --url="$base_url/$1" --title="$1" --admin_user="$1_admin" --admin_email=$2 --admin_password=$3
+$wp_cli core install --url="$site_url" --url="$site_url" --title="$1" --admin_user="$1_admin" --admin_email=$2 --admin_password=$3
 
 
 if [ $? -ne 0 ]; then
@@ -60,9 +77,67 @@ chmod 400 wp-config.php
 
 
 if [ $? -ne 0 ]; then
-	echo "create config failed\n"
+	echo "settings permissions on wp-config failed\n"
 	exit 1
 fi
 
-echo "wordpress successfully installed at $base_url/$1\n"
 
+chmod g+rw wp-config.php
+if [ $? -ne 0 ]; then
+  printf "setting permissions on wp-config.php failed\n"
+  exit 1
+fi
+
+
+chmod u+rw wp-config.php
+if [ $? -ne 0 ]; then
+  printf "setting permissions on wp-config.php failed\n"
+  exit 1
+fi
+
+
+printf "<?php\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n"
+  exit 1
+fi
+
+printf "\$_SERVER['HTTPS']='on';\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n"
+  exit 1
+fi
+
+printf "define('WP_SITE_URL', '$site_url');\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n"
+  exit 1
+fi
+
+printf "define('WP_SITEURL', '$site_url');\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n" 
+  exit 1
+fi
+
+
+printf "define('WP_HOME', '$site_url');\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n"
+  exit 1
+fi
+
+tail -n+2 wp-config.php >> new-wp-config.php
+mv new-wp-config.php wp-config.php
+
+if [ $? -ne 0 ]; then
+  chmod 400 wp-config.php
+  exit 1
+fi
+
+mysql --defaults-file=$mysql_defaults_file -D $namespace -e "update wp_options set option_value = '$site_url' where option_name='home'" 
+mysql --defaults-file=$mysql_defaults_file -D $namespace -e "update wp_options set option_value = '$site_url' where option_name='siteurl'" 
+
+user_id=`mysql --defaults-file=/home/linkspace/mysql.cnf -D testcli27 --column-names=False -e "select ID from wp_users where user_login='testcli27_admin'" | cut -d '|' -f 1`
+
+echo "wordpress successfully installed at $site_url\n"
