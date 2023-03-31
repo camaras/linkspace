@@ -14,7 +14,7 @@
           <tr><th scope="col">Site Name</th><th scope="col">Site Link</th><th scope="col">Site Admin Link</th></tr> 
         </thead>
         <tbody id="website_table_body">
-          <tr ng-repeat="website in websites" id="{{website.name}}"><td class="table-cell text-info">{{website.name}}</td><td><a class="text-info" href="{{website.site}}">{{website.site}}</a></td><td><a class="text-info" href="{{website.admin_site}}">{{website.admin_site}}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site($event)">Delete Site</button></td></tr>
+          <tr ng-repeat="website in websites" id="{{website.name}}"><td class="table-cell text-info">{{website.name}}</td><td><a class="text-info" href="{{website.site}}" target="_blank">{{website.site}}</a></td><td><a class="text-info" href="{{website.admin_site}}" target="_blank">{{website.admin_site}}</a></td><td class="table-cell"><button type="button" class="btn-red" ng-click="delete_site($event)">Delete Site</button></td></tr>
         </tbody>
         </table>
       </div>

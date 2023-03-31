@@ -9,11 +9,6 @@ body {
 }
 
 
-#loader1 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
 
 .btn-search {
 	  background: #424242;
@@ -53,4 +48,5 @@ body {
 
 #id_password {
     opacity: 0.8;
-} 
+}
+

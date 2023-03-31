@@ -299,8 +299,9 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
     
 
     $scope.delete_site = function($event){
-
       site_name = $($event.currentTarget).parent().parent().attr('id');
+      if (! window.confirm("Do you really want to delete " + site_name + "?"))
+        return;
       /* site_name2 = $($element).parent().parent().name */
       $("#loader1").show();
       $.ajax({type:"DELETE", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: "", admin_password: "" }, complete: function(jqxhr, textstatus){
@@ -328,6 +329,7 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
         admin_email = $('#admin_email').val();
         admin_password = $('#admin_password').val();
 
+        $("#create_site_results").empty();
         $("#loader1").show();
         $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){

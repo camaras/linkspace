@@ -25,9 +25,9 @@ print(BASE_DIR)
 SECRET_KEY = '+&f@p4ak6_6ef_3=r@ek3qed(i^l5q2n^@e0tw!lhw&g1tsz0b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = False 
 
-ALLOWED_HOSTS = [u"linkspace.webnote.com.au", "10.167.47.216"]
+ALLOWED_HOSTS = [u"linkspace.webnote.com.au", "10.167.47.216", u"webspace.webnote.com.au"]
 
 SESSION_ENGINE='django.contrib.sessions.backends.db'
 
@@ -35,11 +35,17 @@ SESSION_SAVE_EVERY_REQUEST=True
 
 MAX_WEBSITES_PER_USER=15
 
+CREATE_WORDPRESS_SCRIPT="/home/linkspace/linkspace/create_wordpress"
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': {
         'rest_framework.authentication.BasicAuthentication'
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+  "webspace.context_processors.root_url"
+)
 
 
 # Application definition
@@ -64,7 +70,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'linkspace.simplemiddleware.SimpleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -105,9 +110,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'linkspace.wsgi.application'
 
 SITE_ID = 1
-SITE_URL = "linkspace.webnote.com.au"
-WORDPRESS_URL_BASE = SITE_URL + "/wordpress"
-SITE_NAME = "LinkSpace"
+SITE_URL = "webspace.webnote.com.au"
+WORDPRESS_URL_BASE = "https://wordpress.webnote.com.au/wordpress"
+SITE_NAME = "WebSpace"
+ROOT_WORDPRESS_DIR = "/var/www/html/wordpress"
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -212,7 +218,7 @@ LOGGING = {
     }     
 }
 
-DEFAULT_FROM_EMAIL = 'do_not_reply@holiday.webnote.com.au'
+DEFAULT_FROM_EMAIL = 'do_not_reply@webspace.webnote.com.au'
 EMAIL_HOST = "127.0.0.1" 
 EMAIL_HOST_PORT = 465 
 EMAIL_USE_TLS = True
