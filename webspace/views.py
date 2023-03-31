@@ -53,7 +53,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           user = User.objects.get(username=username)
           webspace = Webspace(user=user, site_name=site_name, admin_email=admin_email)
           webspace.save()
-          return JsonResponse({ "site_name" : site_name, "site_url" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + site_name + "/", "admin_site_url" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + site_name + "/wp-admin/"})
+          return JsonResponse({ "site_name" : site_name, "site_url" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + site_name + "/", "admin_site_url" : settings.WORDPRESS_URL_BASE + "/webspace/login_admin/" + site_name + "/"})
       elif ("already" in str(output.stdout) or "exists" in str((output.stdout))):
           http_response = JsonResponse({"one" : "conflicts in installing  wordpress"})
           http_response.status_code = 409
@@ -81,7 +81,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           { 
             "name" : webspace.site_name,
             "site" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + webspace.site_name + "/",
-            "admin_site" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + webspace.site_name + "/wp-admin/" 
+            "admin_site" : settings.WORDPRESS_URL_BASE + "/webspace/login_admin/" + webspace.site_name + "/" 
           }) 
 
       return self.render_to_response({"webspaces": webspace_urls})
@@ -113,7 +113,7 @@ def get_webspaces(request):
           { 
             "name" : webspace.site_name,
             "site" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + webspace.site_name + "/",
-            "admin_site" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + webspace.site_name + "/wp-admin/" 
+            "admin_site" : "https://" + settings.SITE_URL + "/webspace/login_admin/" + webspace.site_name + "/" 
           }) 
 
       response = JsonResponse({"websites" : webspace_urls})
