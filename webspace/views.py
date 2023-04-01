@@ -53,7 +53,7 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
           user = User.objects.get(username=username)
           webspace = Webspace(user=user, site_name=site_name, admin_email=admin_email)
           webspace.save()
-          return JsonResponse({ "site_name" : site_name, "site_url" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + site_name + "/", "admin_site_url" : settings.WORDPRESS_URL_BASE + "/webspace/login_admin/" + site_name + "/"})
+          return JsonResponse({ "site_name" : site_name, "site_url" : settings.WORDPRESS_URL_BASE + "/" + username + "/" + site_name + "/", "admin_site_url" : "https://" + settings.SITE_URL + "/webspace/login_admin/" + site_name + "/"})
       elif ("already" in str(output.stdout) or "exists" in str((output.stdout))):
           http_response = JsonResponse({"one" : "conflicts in installing  wordpress"})
           http_response.status_code = 409
@@ -96,10 +96,13 @@ class CreateWebspaceFormView(FormMixin, ProcessFormView):
 
       if len(user_webspace) == 1:
           user_webspace.delete()
-          return JsonResponse({})
+
+          output = subprocess.run([settings.DELETE_WORDPRESS_SCRIPT, site_name], capture_output=True)
+          if (output.returncode == 0):
+              return JsonResponse({})
 
 
-      http_response = JsonResponse({"error" : "Errors in installing wordpress"})
+      http_response = JsonResponse({"error" : "Errors in deleting wordpress"})
       http_response.status_code = 500 
       return http_response
 
