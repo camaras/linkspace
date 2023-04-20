@@ -4,6 +4,7 @@ site_url="https://$base_url/$4/$1"
 base_webfolder="/var/www/html/wordpress"
 wp_cli="/home/linkspace/bin/wp-cli.phar"
 mysql_defaults_file="/home/linkspace/mysql.cnf"
+popularfx_plugin="/home/linkspace/popularfx/1.2.2.zip"
 
 cd $base_webfolder
 if [ ! -d $4 ]; then 
@@ -67,7 +68,6 @@ fi
 
 $wp_cli core install --url="$site_url" --url="$site_url" --title="$1" --admin_user="$1_admin" --admin_email=$2 --admin_password=$3
 
-
 if [ $? -ne 0 ]; then
 	echo "create config failed\n"
 	exit 1
@@ -127,6 +127,11 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+printf "define('FS_METHOD', 'direct');\n" >> new-wp-config.php
+if [ $? -ne 0 ]; then
+  printf "configuring wp-config.php failed\n"
+  exit 1
+fi
 tail -n+2 wp-config.php >> new-wp-config.php
 mv new-wp-config.php wp-config.php
 

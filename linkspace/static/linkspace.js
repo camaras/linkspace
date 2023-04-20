@@ -296,6 +296,20 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
       $("#loader1").hide();
 
     }});
+
+
+
+    forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('formsubmit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
     
 
     $scope.delete_site = function($event){
@@ -324,14 +338,18 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
 
     $scope.click_create_site = function(){
 
-        token = $('#create_webspace_form [name="csrfmiddlewaretoken"]').val();
-        site_name = $('#site_name').val();
-        admin_email = $('#admin_email').val();
-        admin_password = $('#admin_password').val();
+        event = new Event("formsubmit", {cancelable: true});
 
-        $("#create_site_results").empty();
-        $("#loader1").show();
-        $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
+        if ($("#create_webspace_form")[0].dispatchEvent(event)){
+
+          token = $('#create_webspace_form [name="csrfmiddlewaretoken"]').val();
+          site_name = $('#site_name').val();
+          admin_email = $('#admin_email').val();
+          admin_password = $('#admin_password').val();
+
+          $("#create_site_results").empty();
+          $("#loader1").show();
+          $.ajax({type:"POST", url: "/webspace/create_webspace/", headers: {'X-CSRFToken': $scope.token}, data: { site_name: site_name, admin_email: admin_email, admin_password: admin_password, csrfmiddlewaretoken: token }, success: function(data, textstatus, jqxhr){
             if (jqxhr.status == 200){
               alert("Successfully created website " + site_name);
               site_name = data["site_name"];
@@ -359,7 +377,9 @@ app.controller('WebspaceController', ['$scope', '$rootScope', '$http', '$locatio
             }, error: function(jqxhr, textstatus, error){
               $("#create_site_results").append('<div> there was an error in creating the site, please contact the helpdesk for help in resolving the issue</div>');
               $("#loader1").hide();
-            }}); 
+            }});
+
+      }; 
     }}]);
 
 app.controller('MeetController',
@@ -422,4 +442,31 @@ app.controller('BookController',
         }
     ]);
 
-/* end */    
+/* end */   
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('formsubmit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+
+
+
+
+
+
+
+ 

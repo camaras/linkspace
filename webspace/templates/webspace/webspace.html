@@ -21,16 +21,26 @@
     </div>
     {% endverbatim %}
     <p class="text-info text-center"> Fill in details of the website you will like to create and click on Create Site </p> 
-    <form id="create_webspace_form" action="webspace/create_webspace">{% csrf_token %}
+    <form class="needs-validation" id="create_webspace_form" action="webspace/create_webspace" novalidate>{% csrf_token %}
       <div class="container">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="site name" id="site_name" name="site_name">
+          <input type="text" class="form-control" placeholder="site name" id="site_name" name="site_name" pattern="\S{1,30}" required>
+          <div class="invalid-feedback">
+            Please provide a site name without spaces and less than 30 characters
+          </div>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="admin email address" id="admin_email" name="admin_email">
+          <input type="email" class="form-control" placeholder="admin email address" id="admin_email" name="admin_email" pattern="\S{1,30}" required>
+          <div class="invalid-feedback">
+            Please provide a valid email address less than 30 characters
+          </div>
+
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" placeholder="admin password" id="admin_password" name="admin_password">
+          <input type="password" class="form-control" placeholder="admin password" id="admin_password" name="admin_password" pattern="\S{8,30}" required>
+          <div class="invalid-feedback">
+            Please provide a valid password between 8 and 30 characters 
+          </div>
         </div>
         <span class="input-group-btn">
           <button class="btn btn-dark" type="button" href ng-click="click_create_site()" >Create Site</button>

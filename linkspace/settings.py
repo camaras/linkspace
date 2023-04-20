@@ -37,6 +37,8 @@ MAX_WEBSITES_PER_USER=15
 
 CREATE_WORDPRESS_SCRIPT="/home/linkspace/linkspace/create_wordpress"
 
+DELETE_WORDPRESS_SCRIPT="/home/linkspace/linkspace/delete_wordpress"
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': {
         'rest_framework.authentication.BasicAuthentication'
